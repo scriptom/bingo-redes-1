@@ -1,0 +1,21 @@
+#Green{
+    -fx-background-color: lightgreen;
+    }
+
+#Blue{
+    -fx-background-color: skyblue;
+}
+
+#Red{
+    -fx-background-color: #FF5954;
+}
+#panelBlured{
+    -fx-background-color: #EFFFFF;
+    -fx-opacity: 0.7;
+    -fx-border-radius: 50px;
+    -fx-background-radius: 50px;
+}
+
+#Titulo{
+    -fx-spacing: 5px;
+}
