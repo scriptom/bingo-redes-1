@@ -5,10 +5,18 @@ import bingo.game.victories.DiagonalVictory;
 import bingo.game.victories.HorizontalVictory;
 import bingo.game.victories.LinearVictory;
 import bingo.game.victories.Victory;
+import javafx.application.Application;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import javafx.fxml.*;
 
 import java.util.Arrays;
 
-public class Bingo {
+
+public class Bingo extends Application{
+    /* Aqui comienzan las funciones implementadas en dev, por ahora estan comentadas para
+   crear las vistas
     public static void main(String[] args) {
         Cardboard cardboard = new Cardboard();
         for (BingoValue row: cardboard.valueRow(0)) cardboard.checkIfPresent(row);
@@ -17,5 +25,26 @@ public class Bingo {
         Victory victory = new LinearVictory();
         System.out.println("\ncardboard = \n" + cardboard);
         System.out.println("hasBingo = " + victory.hasBingo(cardboard));
+
+
+    }
+
+     */
+
+    @Override
+    public void start (Stage primaryStage) throws Exception{
+        Parent inicial = FXMLLoader.load(getClass().getResource("/bingo/vistas/Inicio.fxml"));
+        Scene scene = new Scene(inicial,600,400);
+        primaryStage.setTitle("Bienvenido al Bingo!");
+        primaryStage.setResizable(false);
+        primaryStage.setScene(scene);
+        scene.getStylesheets().add("/bingo/vistas/MyStyles.css");
+        primaryStage.show();
+    }
+
+
+    public static void main(String[] args) {
+        launch(args);
     }
 }
+
