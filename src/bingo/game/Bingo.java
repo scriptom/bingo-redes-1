@@ -5,6 +5,10 @@ import bingo.game.victories.DiagonalVictory;
 import bingo.game.victories.HorizontalVictory;
 import bingo.game.victories.LinearVictory;
 import bingo.game.victories.Victory;
+<<<<<<< Updated upstream
+=======
+import checker.FullChecker;
+>>>>>>> Stashed changes
 import checker.LineChecker;
 
 import java.util.*;
@@ -12,6 +16,10 @@ import java.util.*;
 public class Bingo {
     public static void main(String[] args) {
         Cardboard cardboard = new Cardboard(new LineChecker());
+<<<<<<< Updated upstream
+=======
+        //Cardboard cardboard = new Cardboard(new FullChecker());
+>>>>>>> Stashed changes
         //Para mostrar por pantalla
         Scanner input = new Scanner(System.in);
         boolean keepPlaying = true;
@@ -30,7 +38,10 @@ public class Bingo {
                 }
             }
             
+<<<<<<< Updated upstream
             System.out.println("");
+=======
+>>>>>>> Stashed changes
             System.out.println("El siguiente numero es: "+number);
             System.out.println("Marcar casilla: ");
             String position = input.next();
@@ -40,6 +51,15 @@ public class Bingo {
             }
         
         }
+<<<<<<< Updated upstream
+=======
+        System.out.println("");
+        System.out.println("");
+        
+        String print = cardboard.render();
+        System.out.println(print);
+        
+>>>>>>> Stashed changes
         System.out.println("BINGO MANAOOO, SI SIRVE ESTA VAINAAA");
         //for (BingoValue row: cardboard.valueRow(0)) cardboard.checkIfPresent(row);
 //        int row = 6;

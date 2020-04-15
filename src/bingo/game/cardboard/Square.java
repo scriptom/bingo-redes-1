@@ -1,9 +1,8 @@
 package bingo.game.cardboard;
 
-import bingo.contracts.Renderable;
 import bingo.game.BingoValue;
 
-public class Square implements Renderable {
+public class Square{
     private BingoValue bingoValue;
     private boolean checked;
 
@@ -28,8 +27,7 @@ public class Square implements Renderable {
     public String toString() {
         return bingoValue.toString();
     }
-
-    @Override
+    
     public String render() {
         StringBuilder sb = new StringBuilder();
         if (checked) {
