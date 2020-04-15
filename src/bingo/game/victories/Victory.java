@@ -1,6 +1,6 @@
-package bingo.game.victories;
+package game.victories;
 
-import bingo.game.cardboard.Cardboard;
+import game.cardboard.Cardboard;
 
 public interface Victory {
     boolean hasBingo(Cardboard cardboard);

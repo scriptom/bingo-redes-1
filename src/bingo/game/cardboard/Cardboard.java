@@ -1,7 +1,7 @@
-package bingo.game.cardboard;
+package game.cardboard;
 
 import bingo.contracts.Renderable;
-import bingo.game.Bingo;
+import game.Bingo;
 import bingo.game.BingoValue;
 
 import java.util.*;

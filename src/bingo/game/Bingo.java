@@ -1,5 +1,7 @@
-package bingo.game;
+package game;
 
+import java.awt.event.ActionEvent;
+import java.io.IOException;
 import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -18,26 +20,26 @@ public class Bingo extends Application{
         Victory victory = new LinearVictory();
         System.out.println("\ncardboard = \n" + cardboard);
         System.out.println("hasBingo = " + victory.hasBingo(cardboard));
-
-
     }
-
      */
 
     @Override
     public void start (Stage primaryStage) throws Exception{
-        Parent inicial = FXMLLoader.load(getClass().getResource("/bingo/vistas/victoria.fxml"));
+        Parent inicial = FXMLLoader.load(getClass().getResource("/vistas/Inicio.fxml"));
         Scene scene = new Scene(inicial,600,400);
         primaryStage.setTitle("Bienvenido al Bingo!");
         primaryStage.setResizable(false);
         primaryStage.setScene(scene);
-        scene.getStylesheets().add("/bingo/vistas/MyStyles.css");
+        scene.getStylesheets().add("/vistas/MyStyles.css");
         primaryStage.show();
     }
-
+    
+    @FXML
+    public void button(ActionEvent event) throws IOException {
+        System.out.println("Button");
+    }
 
     public static void main(String[] args) {
         launch(args);
     }
 }
-

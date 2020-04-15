@@ -17,66 +17,63 @@
             <Image url="@../imagenes/bingo.jpg" />
          </image>
       </ImageView>
-      <Pane id="panelBlured" layoutX="9.0" layoutY="8.0" prefHeight="392.0" prefWidth="606.0">
-         <children>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffffffd3" height="265.0" layoutX="303.0" layoutY="64.0" stroke="BLACK" strokeType="INSIDE" width="260.0" />
-            <Label layoutX="340.0" layoutY="222.0" text="1 carton" />
-            <ImageView fitHeight="61.0" fitWidth="73.0" layoutX="331.0" layoutY="135.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../imagenes/linea.png" />
-               </image>
-            </ImageView>
-            <ImageView fitHeight="61.0" fitWidth="85.0" layoutX="331.0" layoutY="249.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../imagenes/bingo.png" />
-               </image>
-            </ImageView>
-            <ImageView fitHeight="86.0" fitWidth="61.0" layoutX="433.0" layoutY="249.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../imagenes/bingo.png" />
-               </image>
-            </ImageView>
-            <ImageView fitHeight="61.0" fitWidth="62.0" layoutX="486.0" layoutY="249.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../imagenes/bingo.png" />
-               </image>
-            </ImageView>
-            <ImageView fitHeight="72.0" fitWidth="61.0" layoutX="456.0" layoutY="135.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../imagenes/carton.png" />
-               </image>
-            </ImageView>
-            <Label layoutX="459.0" layoutY="222.0" text="2 cartones" />
-            <Label layoutX="341.0" layoutY="111.0" text="En linea" />
-            <Label layoutX="442.0" layoutY="111.0" text="Carton completo" />
-            <Label layoutX="370.0" layoutY="64.0" text="Configuración">
-               <font>
-                  <Font name="System Bold" size="19.0" />
-               </font>
-            </Label>
-         </children>
-      </Pane>
-      <ImageView fitHeight="25.0" fitWidth="29.0" layoutX="510.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="25.0" fitWidth="29.0" layoutX="466.0" layoutY="35.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../imagenes/User.png" />
          </image>
       </ImageView>
-      <TableView layoutX="18.0" layoutY="75.0" prefHeight="265.0" prefWidth="252.0">
+      <TableView layoutX="40.0" layoutY="71.0" prefHeight="265.0" prefWidth="252.0">
         <columns>
           <TableColumn prefWidth="157.0" text="Jugadores" />
           <TableColumn prefWidth="94.0" text="# Cartones" />
         </columns>
       </TableView>
-      <Label layoutX="13.0" layoutY="13.0" text="Esperando jugadores">
+      <Label layoutX="40.0" layoutY="27.0" prefHeight="40.0" prefWidth="278.0" text="Esperando jugadores">
          <font>
             <Font size="28.0" />
          </font>
       </Label>
-      <Button id="Red" layoutX="143.0" layoutY="367.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="104.0" text="Salir" />
-      <Button id="Green" layoutX="14.0" layoutY="367.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="104.0" text="Iniciar partida" />
-      <Label layoutX="535.0" layoutY="8.0" prefHeight="25.0" prefWidth="85.0" text="Playername" textAlignment="CENTER">
+      <Button id="Red" layoutX="188.0" layoutY="355.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="104.0" text="Salir" />
+      <Button id="Green" layoutX="40.0" layoutY="355.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="104.0" text="Iniciar partida" />
+      <Pane id="panelBlurred" layoutX="9.0" layoutY="11.0" maxHeight="406.0" maxWidth="684.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="386.0" prefWidth="596.0" />
+      <Label layoutX="494.0" layoutY="35.0" prefHeight="25.0" prefWidth="85.0" text="Playername" textAlignment="CENTER">
          <font>
             <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffffffd0" height="265.0" layoutX="318.0" layoutY="71.0" stroke="BLACK" strokeType="INSIDE" width="260.0" />
+      <Label layoutX="356.0" layoutY="231.0" text="1 carton" />
+      <ImageView fitHeight="61.0" fitWidth="73.0" layoutX="347.0" layoutY="157.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../imagenes/linea.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="61.0" fitWidth="85.0" layoutX="448.0" layoutY="256.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../imagenes/bingo.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="86.0" fitWidth="61.0" layoutX="511.0" layoutY="256.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../imagenes/bingo.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="61.0" fitWidth="62.0" layoutX="347.0" layoutY="256.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../imagenes/bingo.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="72.0" fitWidth="61.0" layoutX="479.0" layoutY="157.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../imagenes/carton.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="482.0" layoutY="231.0" text="2 cartones" />
+      <Label layoutX="357.0" layoutY="130.0" text="En linea" />
+      <Label layoutX="466.0" layoutY="130.0" text="Carton completo" />
+      <Label layoutX="385.0" layoutY="84.0" text="Configuración">
+         <font>
+            <Font name="System Bold" size="19.0" />
          </font>
       </Label>
    </children>
