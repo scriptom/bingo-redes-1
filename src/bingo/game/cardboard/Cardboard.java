@@ -2,7 +2,7 @@ package game.cardboard;
 
 import bingo.contracts.Renderable;
 import game.Bingo;
-import bingo.game.BingoValue;
+import game.BingoValue;
 
 import java.util.*;
 

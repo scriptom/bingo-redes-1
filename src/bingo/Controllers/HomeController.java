@@ -18,16 +18,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
-/**
- *
- * @author Pablo's pc
- */
 public class HomeController implements Initializable {
-    
-    @FXML 
-    private Button clients;
-    private Button products;
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         
