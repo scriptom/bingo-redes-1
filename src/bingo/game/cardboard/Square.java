@@ -1,7 +1,7 @@
-package game.cardboard;
+package bingo.game.cardboard;
 
 import bingo.contracts.Renderable;
-import game.BingoValue;
+import bingo.game.BingoValue;
 
 public class Square implements Renderable {
     private BingoValue bingoValue;

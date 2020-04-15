@@ -1,7 +1,7 @@
-package game.victories;
+package bingo.game.victories;
 
-import game.BingoValue;
-import game.cardboard.Cardboard;
+import bingo.game.BingoValue;
+import bingo.game.cardboard.Cardboard;
 
 public class HorizontalVictory implements Victory {
     @Override

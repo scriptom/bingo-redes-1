@@ -3,11 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Controllers;
+package bingo.Controllers;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import bingo.game.Bingo;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,16 +23,16 @@ import javafx.stage.Stage;
 public class HomeController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        
+
     }
-    
-   @FXML
+
+    @FXML
     private void goToLobby(ActionEvent event) throws IOException{
         System.out.println("Lobby");
-        FXMLLoader carga = new FXMLLoader(getClass().getClassLoader().getResource("vistas/MainMenu.fxml"));
+        FXMLLoader carga = new FXMLLoader(getClass().getResource("/bingo/vistas/MainMenu.fxml"));
         Parent root = (Parent)carga.load();
         Scene scene = new Scene(root);
-        scene.getStylesheets().add("/vistas/MyStyles.css");
+        scene.getStylesheets().add("/bingo/vistas/MyStyles.css");
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
         window.setScene(scene);
         window.setTitle("Lobby");

@@ -1,4 +1,4 @@
-package game;
+package bingo.game;
 
 import java.awt.event.ActionEvent;
 import java.io.IOException;
@@ -25,15 +25,15 @@ public class Bingo extends Application{
 
     @Override
     public void start (Stage primaryStage) throws Exception{
-        Parent inicial = FXMLLoader.load(getClass().getResource("/vistas/Inicio.fxml"));
+        Parent inicial = FXMLLoader.load(getClass().getResource("/bingo/vistas/Inicio.fxml"));
         Scene scene = new Scene(inicial,600,400);
         primaryStage.setTitle("Bienvenido al Bingo!");
         primaryStage.setResizable(false);
         primaryStage.setScene(scene);
-        scene.getStylesheets().add("/vistas/MyStyles.css");
+        scene.getStylesheets().add("/bingo/vistas/MyStyles.css");
         primaryStage.show();
     }
-    
+
     @FXML
     public void button(ActionEvent event) throws IOException {
         System.out.println("Button");

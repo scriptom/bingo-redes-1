@@ -1,8 +1,6 @@
-package game.cardboard;
+package bingo.game.cardboard;
 
-import bingo.contracts.Renderable;
-import game.Bingo;
-import game.BingoValue;
+import bingo.game.BingoValue;
 
 import java.util.*;
 

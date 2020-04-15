@@ -1,6 +1,6 @@
-package game.victories;
+package bingo.game.victories;
 
-import game.cardboard.Cardboard;
+import bingo.game.cardboard.Cardboard;
 
 public class LinearVictory implements Victory {
     @Override
