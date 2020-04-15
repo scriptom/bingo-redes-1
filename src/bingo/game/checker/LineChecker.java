@@ -1,4 +1,4 @@
-package checker;
+package bingo.game.checker;
 
 import java.util.ArrayList;
 

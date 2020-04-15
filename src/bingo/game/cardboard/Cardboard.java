@@ -3,7 +3,7 @@ package bingo.game.cardboard;
 import bingo.game.Bingo;
 import bingo.game.BingoValue;
 import bingo.game.victories.Victory;
-import checker.BingoChecker;
+import bingo.game.checker.BingoChecker;
 
 import java.util.*;
 
