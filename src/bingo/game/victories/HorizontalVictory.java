@@ -8,6 +8,7 @@ public class HorizontalVictory implements Victory {
     public boolean hasBingo(Cardboard cardboard) {
         // TODO: Aqui se podria aplicar la vecindad y devolver el resultado final.
         //      Esto es solo una prueba rapida
+        /*
         for (int i = 0; i < 5; i++) {
             int checksNeeded = 5;
             for (BingoValue value: cardboard.valueRow(i)) {
@@ -19,6 +20,7 @@ public class HorizontalVictory implements Victory {
                 return true;
             }
         }
+        */
 
         return false;
     }

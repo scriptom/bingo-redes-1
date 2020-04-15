@@ -6,6 +6,7 @@ import java.util.Random;
 
 public class BingoValue {
     private char letter;
+    private boolean check;
     private int number;
     private static final HashMap<Character, Integer> LETTERS_OFFSETS = new HashMap<>();
 
@@ -20,6 +21,19 @@ public class BingoValue {
     private BingoValue(char letter, int number) {
         this.letter = letter;
         this.number = number;
+        this.check = false;
+    }
+
+    public boolean isChecked(){
+        return this.check;
+    }
+
+    public void check(){
+        this.check = true;
+    }
+
+    public void uncheck(){
+        this.check = false;
     }
 
     public char getLetter() {
