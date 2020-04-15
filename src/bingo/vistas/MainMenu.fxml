@@ -10,7 +10,6 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-
 <Pane maxHeight="406.0" maxWidth="684.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="406.0" prefWidth="620.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <ImageView fitHeight="502.0" fitWidth="746.0" layoutX="-126.0" layoutY="-2.0" pickOnBounds="true" preserveRatio="true">
@@ -50,7 +49,7 @@
             <Label layoutX="459.0" layoutY="222.0" text="2 cartones" />
             <Label layoutX="341.0" layoutY="111.0" text="En linea" />
             <Label layoutX="442.0" layoutY="111.0" text="Carton completo" />
-            <Label layoutX="370.0" layoutY="64.0" text="Configuracion">
+            <Label layoutX="370.0" layoutY="64.0" text="Configuración">
                <font>
                   <Font name="System Bold" size="19.0" />
                </font>
