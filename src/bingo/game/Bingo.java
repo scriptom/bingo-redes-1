@@ -1,17 +1,10 @@
 package bingo.game;
 
-import bingo.game.cardboard.Cardboard;
-import bingo.game.victories.DiagonalVictory;
-import bingo.game.victories.HorizontalVictory;
-import bingo.game.victories.LinearVictory;
-import bingo.game.victories.Victory;
 import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.fxml.*;
-
-import java.util.Arrays;
 
 
 public class Bingo extends Application{
@@ -33,7 +26,7 @@ public class Bingo extends Application{
 
     @Override
     public void start (Stage primaryStage) throws Exception{
-        Parent inicial = FXMLLoader.load(getClass().getResource("/bingo/vistas/Inicio.fxml"));
+        Parent inicial = FXMLLoader.load(getClass().getResource("/bingo/vistas/victoria.fxml"));
         Scene scene = new Scene(inicial,600,400);
         primaryStage.setTitle("Bienvenido al Bingo!");
         primaryStage.setResizable(false);
