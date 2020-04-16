@@ -2,3 +2,7 @@
 **/.idea/tasks.xml
 **/External Libraries/lib
 .idea/libraries/lib.xml
+/JavaApplication3/nbproject/private/
+/nbproject/
+build.xml
+manifest.mf
