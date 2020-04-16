@@ -13,12 +13,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 
 import java.io.IOException;
-import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
@@ -28,18 +28,35 @@ import javafx.stage.Stage;
  * @author Cesar
  */
 public class MainMenuController implements Initializable {
-
+    @FXML
+    private Button oneCardboard = new Button();
+    @FXML
+    private Button twoCardboards = new Button();
+    
     /**
      * Initializes the controller class.
      */
+    public void setNumberOfCardboards(int value) {
+        PartidaController.numberOfCardboards = value;
+    }
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        oneCardboard.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                System.out.println("1 carton");
+                PartidaController.numberOfCardboards = 1;
+            }
+         });
+        
+        twoCardboards.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                System.out.println("2 cartones");
+                PartidaController.numberOfCardboards = 2;
+            }
+         });
     }
-    public GridPane llenar(GridPane panel) {
-
-        return panel;
-    }
+    
     @FXML
     private void goToPartida(ActionEvent event) throws IOException{
         Parent root = FXMLLoader.load(getClass().getResource("/bingo/vistas/Partida.fxml"));
