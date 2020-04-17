@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<Pane maxHeight="410.0" maxWidth="400" minHeight="-Infinity" minWidth="-Infinity" prefHeight="194.0" prefWidth="400.0" styleClass="panelBlured" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bingo.Controllers.VictoriayBingoFalsoController">
+<Pane id="victoria" maxHeight="410.0" maxWidth="400" minHeight="-Infinity" minWidth="-Infinity" prefHeight="194.0" prefWidth="400.0" styleClass="panelBlured" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bingo.Controllers.VictoriayBingoFalsoController">
    <children>
       <ImageView fitHeight="85.0" fitWidth="54.0" layoutX="14.0" layoutY="44.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -17,6 +17,6 @@
             <Font size="24.0" />
          </font>
       </Label>
-      <Button layoutX="150.0" layoutY="139.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Aceptar" />
+      <Button layoutX="150.0" layoutY="139.0" mnemonicParsing="false" onAction="#aceptar" prefHeight="25.0" prefWidth="100.0" text="Aceptar" />
    </children>
 </Pane>

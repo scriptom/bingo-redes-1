@@ -18,7 +18,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 /**
  *
@@ -29,6 +31,9 @@ public class PartidaController implements Initializable {
     private GridPane carton1;
     @FXML
     private Pane secondCardboard;
+    @FXML
+    static Stage ventana;
+
     static int numberOfCardboards = 1;
     /**
      * Initializes the controller class.
@@ -75,19 +80,24 @@ public class PartidaController implements Initializable {
             Parent root = FXMLLoader.load(getClass().getResource("/bingo/vistas/Victoria.fxml"));
             Scene scene = new Scene(root,400,200);
             scene.getStylesheets().add("/bingo/vistas/MyStyles.css");
-            Stage alerta = new Stage();
+            Stage alerta = new Stage(StageStyle.TRANSPARENT);
             alerta.setScene(scene);
+            scene.setFill(Color.TRANSPARENT);
+            alerta.initStyle(StageStyle.UNDECORATED);
             alerta.setResizable(false);
             alerta.setTitle("Tenemos un Ganador");
             alerta.show();
         }
-        else{
+        else {
             Parent root = FXMLLoader.load(getClass().getResource("/bingo/vistas/BingoFalso.fxml"));
-            Scene scene = new Scene(root,400,400);
+            Scene scene = new Scene(root, 400, 400);
             scene.getStylesheets().add("/bingo/vistas/MyStyles.css");
-            Stage alerta = new Stage();
+            Stage alerta = new Stage(StageStyle.TRANSPARENT);
+            alerta.setScene(scene);
+            scene.setFill(Color.TRANSPARENT);
+            alerta.initStyle(StageStyle.UNDECORATED);
             alerta.setResizable(false);
-            alerta.setTitle("Bingo Falso");
+            alerta.setTitle("Tenemos un Ganador");
             alerta.show();
         }
     }

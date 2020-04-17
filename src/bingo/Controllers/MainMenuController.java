@@ -66,6 +66,7 @@ public class MainMenuController implements Initializable {
         window.setScene(scene);
         window.setTitle("Jugando Bingo!");
         window.show();
+        PartidaController.ventana = window;
     }
 
     @FXML
