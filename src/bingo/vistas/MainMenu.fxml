@@ -30,7 +30,7 @@
             <Font size="28.0" />
          </font>
       </Label>
-      <Button id="Red" layoutX="188.0" layoutY="355.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="104.0" text="Salir" />
+      <Button id="Red" layoutX="188.0" layoutY="355.0" mnemonicParsing="false" onAction="#salir" prefHeight="25.0" prefWidth="104.0" text="Salir" />
       <Button id="Green" layoutX="40.0" layoutY="355.0" mnemonicParsing="false" onAction="#goToPartida" prefHeight="25.0" prefWidth="104.0" text="Iniciar partida" />
       <Label layoutX="494.0" layoutY="35.0" prefHeight="25.0" prefWidth="85.0" text="Playername" textAlignment="CENTER">
          <font>

@@ -56,4 +56,39 @@ public class PartidaController implements Initializable {
              }
         }
     }
+
+    @FXML
+    private void salir(ActionEvent event) throws Exception {
+        Parent root = FXMLLoader.load(getClass().getResource("/bingo/vistas/inicio.fxml"));
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add("/bingo/vistas/MyStyles.css");
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(scene);
+        window.setTitle("Bingo!");
+        window.show();
+    }
+
+    @FXML
+    private void victoria(ActionEvent event) throws Exception{
+        // Hay que meter la validacion del carton en este punto
+        if(true){
+            Parent root = FXMLLoader.load(getClass().getResource("/bingo/vistas/Victoria.fxml"));
+            Scene scene = new Scene(root,400,200);
+            scene.getStylesheets().add("/bingo/vistas/MyStyles.css");
+            Stage alerta = new Stage();
+            alerta.setScene(scene);
+            alerta.setResizable(false);
+            alerta.setTitle("Tenemos un Ganador");
+            alerta.show();
+        }
+        else{
+            Parent root = FXMLLoader.load(getClass().getResource("/bingo/vistas/BingoFalso.fxml"));
+            Scene scene = new Scene(root,400,400);
+            scene.getStylesheets().add("/bingo/vistas/MyStyles.css");
+            Stage alerta = new Stage();
+            alerta.setResizable(false);
+            alerta.setTitle("Bingo Falso");
+            alerta.show();
+        }
+    }
 }

@@ -64,7 +64,18 @@ public class MainMenuController implements Initializable {
         scene.getStylesheets().add("/bingo/vistas/MyStyles.css");
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
         window.setScene(scene);
-        window.setTitle("Lobby");
+        window.setTitle("Jugando Bingo!");
+        window.show();
+    }
+
+    @FXML
+    private void salir(ActionEvent event) throws Exception {
+        Parent root = FXMLLoader.load(getClass().getResource("/bingo/vistas/inicio.fxml"));
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add("/bingo/vistas/MyStyles.css");
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(scene);
+        window.setTitle("Bingo!");
         window.show();
     }
 }

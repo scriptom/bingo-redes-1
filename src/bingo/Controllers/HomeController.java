@@ -11,6 +11,7 @@ import java.util.ResourceBundle;
 
 import bingo.game.Bingo;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -37,5 +38,10 @@ public class HomeController implements Initializable {
         window.setScene(scene);
         window.setTitle("Lobby");
         window.show();
+    }
+
+    @FXML
+    private void salir(ActionEvent event){
+        System.exit(0);
     }
 }
