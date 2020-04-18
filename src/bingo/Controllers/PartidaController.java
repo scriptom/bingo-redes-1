@@ -5,16 +5,18 @@
  */
 package bingo.Controllers;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -28,11 +30,16 @@ import javafx.stage.StageStyle;
  */
 public class PartidaController implements Initializable {
     @FXML
-    private GridPane carton1;
+    private GridPane firstCardboard;
     @FXML
-    private Pane secondCardboard;
+    private GridPane secondCardboard;
+    @FXML
+    private Pane secondCardboardView;
     @FXML
     static Stage ventana;
+    
+    @FXML
+    private Label generatedNumberLabel;
 
     static int numberOfCardboards = 1;
     /**
@@ -41,12 +48,18 @@ public class PartidaController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         System.out.println("se inicia");
+        generatedNumberLabel.setStyle("-fx-font-size: 40");
+        generatedNumberLabel.setAlignment(Pos.TOP_CENTER);
         if (PartidaController.numberOfCardboards == 1){
-            secondCardboard.setVisible(false);
+            this.llenar(firstCardboard);
+            secondCardboardView.setVisible(false);
+            return;
         }
-        this.llenar();
+        this.llenar(firstCardboard);
+        this.llenar(secondCardboard);
     }
-    public void llenar() {
+    public void llenar(GridPane cardboard) {
+        generatedNumberLabel.setText(Integer.toString(43));
         int value = 0;
         for (int i = 0; i<5; i++) {
              for (int j = 0; j<5; j++) {
@@ -54,9 +67,20 @@ public class PartidaController implements Initializable {
                      value++;
                      continue;
                  }
-                Label numberLabel = new Label();
-                numberLabel.setText(Integer.toString(value));
-                carton1.add(numberLabel, j, i, 1, 1);
+                Button numberButton = new Button();
+                numberButton.setText(" "+Integer.toString(value));
+                numberButton.setId(Integer.toString(value));
+                numberButton.setStyle("-fx-background-color: transparent;");
+                numberButton.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override public void handle(ActionEvent e) {
+                        System.out.println("button pressed = "+numberButton.idProperty().getValue());
+                        //aqui se verifica si la marca en el carton es valida
+                        if (true) { // y si lo es, se envia el feedback
+                            numberButton.setStyle("-fx-background-color: green;");
+                        }
+                    }
+                });
+                cardboard.add(numberButton, j, i, 1, 1);
                 value++;
              }
         }
@@ -90,7 +114,5 @@ public class PartidaController implements Initializable {
                 VictoriayFalsoController.victoria= true;
             }
             */
-
-
     }
 }
