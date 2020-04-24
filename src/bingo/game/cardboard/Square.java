@@ -1,7 +1,5 @@
 package bingo.game.cardboard;
 
-import bingo.game.BingoValue;
-
 public class Square{
     private BingoValue bingoValue;
     private boolean checked;

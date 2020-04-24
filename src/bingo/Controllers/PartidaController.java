@@ -7,6 +7,9 @@ package bingo.Controllers;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import bingo.game.cardboard.Cardboard;
+import bingo.game.checker.LineChecker;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -42,12 +45,16 @@ public class PartidaController implements Initializable {
     private Label generatedNumberLabel;
 
     static int numberOfCardboards = 1;
+
+    private Cardboard cardboard;
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         System.out.println("se inicia");
+        this.cardboard = new Cardboard(new LineChecker());
         generatedNumberLabel.setStyle("-fx-font-size: 40");
         generatedNumberLabel.setAlignment(Pos.TOP_CENTER);
         if (PartidaController.numberOfCardboards == 1){

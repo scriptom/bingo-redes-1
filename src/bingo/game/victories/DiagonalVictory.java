@@ -1,6 +1,5 @@
 package bingo.game.victories;
 
-import bingo.game.BingoValue;
 import bingo.game.cardboard.Cardboard;
 
 public class DiagonalVictory implements Victory {

@@ -1,4 +1,4 @@
-package bingo.game;
+package bingo.game.cardboard;
 
 import java.util.Date;
 import java.util.HashMap;

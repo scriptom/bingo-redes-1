@@ -1,12 +1,11 @@
 package bingo.game.cardboard;
 
-import bingo.game.BingoValue;
 import bingo.game.checker.BingoChecker;
 
 import java.util.*;
 
 public class Cardboard {
-    private HashMap<String, BingoValue> squares;
+    private LinkedHashMap<String, BingoValue> squares;
     private BingoChecker bingoChecker;
     //private Map<Character, BingoValue[]> squares;
     //private Map<Character, List<Integer>> checked;
@@ -18,11 +17,12 @@ public class Cardboard {
 
     public Cardboard(BingoChecker checker) {
         //squares = new LinkedHashMap<>();
-        squares = new HashMap<>();
+        squares = new LinkedHashMap<>();
         this.bingoChecker = checker;
         //checked = new HashMap<>();
         populate();
-        squares.get("N3").check();;
+        squares.get("N3").check();
+        System.out.println(squares);
     }
 
     private void populate() {
