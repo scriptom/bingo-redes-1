@@ -9,6 +9,7 @@ public class DiagonalVictory implements Victory {
         int row = 0;
         boolean mainDiag = true, secDiag = true;
 
+        /*
         // Diagonal principal
         for (BingoValue[] col: cardboard.getSquares().values()) {
             if (!cardboard.isChecked(col[row++])) {
@@ -25,6 +26,7 @@ public class DiagonalVictory implements Victory {
                 break;
             }
         }
+        */
 
         return mainDiag || secDiag;
     }
