@@ -12,7 +12,6 @@ import java.util.ResourceBundle;
 import bingo.game.cardboard.BingoValue;
 import bingo.game.cardboard.Cardboard;
 import bingo.game.checker.LineChecker;
-import com.sun.xml.internal.ws.wsdl.writer.document.Part;
 import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -65,7 +64,8 @@ public class PartidaController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        System.out.println("se inicia");
+        //Cada vez que se inicie una partida, victoria se pondra en falso para que funcione correctamente el bingo
+        VictoriayFalsoController.victoria = false;
         this.cardboard = new Cardboard(new LineChecker());
         generatedNumberLabel.setStyle("-fx-font-size: 40");
         generatedNumberLabel.setAlignment(Pos.TOP_CENTER);
