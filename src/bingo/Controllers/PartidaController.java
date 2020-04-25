@@ -6,10 +6,13 @@
 package bingo.Controllers;
 
 import java.net.URL;
+import java.util.LinkedHashMap;
 import java.util.ResourceBundle;
 
+import bingo.game.cardboard.BingoValue;
 import bingo.game.cardboard.Cardboard;
 import bingo.game.checker.LineChecker;
+import com.sun.xml.internal.ws.wsdl.writer.document.Part;
 import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -47,7 +50,8 @@ public class PartidaController implements Initializable {
 
     static int numberOfCardboards = 1;
 
-    private Cardboard cardboard;
+    public static Cardboard cardboard;
+    public static Cardboard cardboard2;
 
     //Crear Pseudoclass para el css
     private static final String MARCADO = "marcado";
@@ -65,46 +69,66 @@ public class PartidaController implements Initializable {
         this.cardboard = new Cardboard(new LineChecker());
         generatedNumberLabel.setStyle("-fx-font-size: 40");
         generatedNumberLabel.setAlignment(Pos.TOP_CENTER);
+        this.llenar(firstCardboard, cardboard.getSquares(), 1);
         if (PartidaController.numberOfCardboards == 1){
-            this.llenar(firstCardboard);
             secondCardboardView.setVisible(false);
             return;
         }
-        this.llenar(firstCardboard);
-        this.llenar(secondCardboard);
+        this.cardboard2 = new Cardboard(new LineChecker());
+        this.llenar(secondCardboard, cardboard2.getSquares(), 2);
     }
-    public void llenar(GridPane cardboard) {
+
+    public void llenar(GridPane cardboard, LinkedHashMap<String, BingoValue> squares, int numberCardboard) {
         generatedNumberLabel.setText(Integer.toString(43));
         int value = 0;
-        for (int i = 0; i<5; i++) {
-             for (int j = 0; j<5; j++) {
-                 if (value == 12) {
-                     value++;
-                     continue;
-                 }
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                if (value == 12) {
+                    value++;
+                    continue;
+                }
+
                 Button numberButton = new Button();
-                numberButton.setText(" "+Integer.toString(value));
-                numberButton.setMaxWidth(37);
-                numberButton.setMaxHeight(25);
-                numberButton.setId(Integer.toString(value));
+                //Se toma el numero de la casilla creada en la clase Cardboard
+                numberButton.setText( Integer.toString( squares.get( getLetter(j+1)+Integer.toString(i+1) ).getNumber()) );
+                //Se establece
+                numberButton.setId(Integer.toString(numberCardboard) + getLetter(j+1) + Integer.toString(i+1));
                 //Agrega el CSS del boton
                 numberButton.getStyleClass().add(MARCADO);
                 numberButton.setOnAction(new EventHandler<ActionEvent>() {
+
                     @Override public void handle(ActionEvent e) {
                         System.out.println("button pressed = "+numberButton.idProperty().getValue());
-                        //aqui se verifica si la marca en el carton es valida
-                        if (true) { // y si lo es, se envia el feedback
-                            //Cambiar el estado de la PseudoClass para que se convierta en selected
-                            numberButton.pseudoClassStateChanged(SELECTED_PSEUDO_CLASS,true);
+                        String position = numberButton.getId().substring(1);
+                        System.out.println("Posicion a marcar: "+position);
+                        String number = numberButton.getId().substring(0,1);
+                        if (true) { // VALIDACION SI ES EL NUMERO QUE SE GENERA EN LA PARTIDA
+                            System.out.println("Carton a marcar" + number);
+                            if((number.equals("1")) && (cardboard != null)){
+                                //Se marca la casilla en la logica
+                                PartidaController.cardboard.checkIfPresent(position);
+                                //Se valida el bingo
+                                if(PartidaController.cardboard.checkBingo(position)){
+                                    VictoriayFalsoController.victoria = true;
+                                }
                             }
+                            if((number.equals("2")) && (cardboard2 != null)){
+                                //Se marca la casilla en la logica
+                                PartidaController.cardboard2.checkIfPresent(position);
+                                //Se valida el bingo
+                                if(PartidaController.cardboard2.checkBingo(position)){
+                                    VictoriayFalsoController.victoria = true;
+                                }
+                            }
+                            numberButton.pseudoClassStateChanged(SELECTED_PSEUDO_CLASS,true);
                         }
-                    });
-
+                    }
+                });
                 cardboard.add(numberButton, j, i, 1, 1);
                 value++;
-                 }
-             }
+            }
         }
+    }
 
     @FXML
     private void salir(ActionEvent event) throws Exception {
@@ -134,5 +158,21 @@ public class PartidaController implements Initializable {
                 VictoriayFalsoController.victoria= true;
             }
             */
+    }
+
+
+    /**
+    * @param index numero de la columna en la que se encuentra la iteracion
+    * @return  Letra la columna en la que se esta iterando
+     */
+    private String getLetter(int index){
+        switch (index){
+            case 1: return "B";
+            case 2: return "I";
+            case 3: return "N";
+            case 4: return "G";
+            case 5: return "O";
+            default: return "P";
+        }
     }
 }

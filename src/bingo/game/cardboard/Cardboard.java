@@ -53,7 +53,7 @@ public class Cardboard {
         // }
     }
 
-    public HashMap<String, BingoValue> getSquares(){
+    public LinkedHashMap<String, BingoValue> getSquares(){
         return squares;
     }
     
@@ -131,6 +131,7 @@ public class Cardboard {
         if(value != null){
             if(!value.isChecked()){
                 value.check();
+
                 return true;
             }
         }
