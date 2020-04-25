@@ -22,7 +22,7 @@ public class Cardboard {
         //checked = new HashMap<>();
         populate();
         squares.get("N3").check();
-        System.out.println(squares);
+        checkBingo("N3");
     }
 
     private void populate() {

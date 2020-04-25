@@ -103,7 +103,7 @@ public class PartidaController implements Initializable {
                         System.out.println("Posicion a marcar: "+position);
                         String number = numberButton.getId().substring(0,1);
                         if (true) { // VALIDACION SI ES EL NUMERO QUE SE GENERA EN LA PARTIDA
-                            System.out.println("Carton a marcar" + number);
+                            System.out.println("Carton a marcar: " + number);
                             if((number.equals("1")) && (cardboard != null)){
                                 //Se marca la casilla en la logica
                                 PartidaController.cardboard.checkIfPresent(position);
