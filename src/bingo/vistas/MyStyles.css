@@ -59,3 +59,12 @@
     -fx-border-color: black;
 }
 
+.marcado{
+    -fx-background-color: transparent
+}
+
+.marcado:selected{
+    -fx-background-color:#BDEFFF ;
+    -fx-border-width: 1px;
+    -fx-border-color: black;
+}

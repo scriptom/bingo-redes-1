@@ -10,6 +10,7 @@ import java.util.ResourceBundle;
 
 import bingo.game.cardboard.Cardboard;
 import bingo.game.checker.LineChecker;
+import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -48,6 +49,13 @@ public class PartidaController implements Initializable {
 
     private Cardboard cardboard;
 
+    //Crear Pseudoclass para el css
+    private static final String MARCADO = "marcado";
+
+    private static final PseudoClass SELECTED_PSEUDO_CLASS =
+            PseudoClass.getPseudoClass("selected");
+
+
     /**
      * Initializes the controller class.
      */
@@ -76,26 +84,31 @@ public class PartidaController implements Initializable {
                  }
                 Button numberButton = new Button();
                 numberButton.setText(" "+Integer.toString(value));
+                numberButton.setMaxWidth(37);
+                numberButton.setMaxHeight(25);
                 numberButton.setId(Integer.toString(value));
-                numberButton.setStyle("-fx-background-color: transparent;");
+                //Agrega el CSS del boton
+                numberButton.getStyleClass().add(MARCADO);
                 numberButton.setOnAction(new EventHandler<ActionEvent>() {
                     @Override public void handle(ActionEvent e) {
                         System.out.println("button pressed = "+numberButton.idProperty().getValue());
                         //aqui se verifica si la marca en el carton es valida
                         if (true) { // y si lo es, se envia el feedback
-                            numberButton.setStyle("-fx-background-color: green;");
+                            //Cambiar el estado de la PseudoClass para que se convierta en selected
+                            numberButton.pseudoClassStateChanged(SELECTED_PSEUDO_CLASS,true);
+                            }
                         }
-                    }
-                });
+                    });
+
                 cardboard.add(numberButton, j, i, 1, 1);
                 value++;
+                 }
              }
         }
-    }
 
     @FXML
     private void salir(ActionEvent event) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/bingo/vistas/inicio.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/bingo/vistas/Inicio.fxml"));
         Scene scene = new Scene(root);
         scene.getStylesheets().add("/bingo/vistas/MyStyles.css");
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
