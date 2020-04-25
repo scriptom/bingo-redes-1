@@ -5,36 +5,44 @@
  */
 package bingo.Controllers;
 
-import java.net.URL;
-import java.util.LinkedHashMap;
-import java.util.ResourceBundle;
-
+import bingo.game.Player;
 import bingo.game.cardboard.BingoValue;
 import bingo.game.cardboard.Cardboard;
 import bingo.game.checker.LineChecker;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.net.URL;
+import java.util.*;
+
 /**
  *
  * @author Cesar
  */
 public class PartidaController implements Initializable {
+    @FXML
+    private Label lblPlayerName;
+    @FXML
+    private TableView<Player> playerTable;
     @FXML
     private GridPane firstCardboard;
     @FXML
@@ -43,14 +51,11 @@ public class PartidaController implements Initializable {
     private Pane secondCardboardView;
     @FXML
     static Stage ventana;
-    
+
     @FXML
     private Label generatedNumberLabel;
 
-    static int numberOfCardboards = 1;
-
-    public static Cardboard cardboard;
-    public static Cardboard cardboard2;
+    private SimpleIntegerProperty generatedNumber = new SimpleIntegerProperty(this, "generatedNumber");
 
     //Crear Pseudoclass para el css
     private static final String MARCADO = "marcado";
@@ -58,27 +63,66 @@ public class PartidaController implements Initializable {
     private static final PseudoClass SELECTED_PSEUDO_CLASS =
             PseudoClass.getPseudoClass("selected");
 
+    /**
+     * Mapa de jugadores
+     * TODO: Estudiar como popularlo
+     */
+    private ObservableList<Player> players;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        //Cada vez que se inicie una partida, victoria se pondra en falso para que funcione correctamente el bingo
-        VictoriayFalsoController.victoria = false;
-        this.cardboard = new Cardboard(new LineChecker());
-        generatedNumberLabel.setStyle("-fx-font-size: 40");
-        generatedNumberLabel.setAlignment(Pos.TOP_CENTER);
-        this.llenar(firstCardboard, cardboard.getSquares(), 1);
-        if (PartidaController.numberOfCardboards == 1){
-            secondCardboardView.setVisible(false);
-            return;
-        }
-        this.cardboard2 = new Cardboard(new LineChecker());
-        this.llenar(secondCardboard, cardboard2.getSquares(), 2);
+        prepareGame();
+        joinPlayer(Player.getInstance());
+        initGameView();
     }
 
-    public void llenar(GridPane cardboard, LinkedHashMap<String, BingoValue> squares, int numberCardboard) {
+    private void initGameView() {
+        initTableView();
+        lblPlayerName.setText(Player.getInstance().getName());
+    }
+
+    private void prepareGame() {
+        // Cada vez que se inicie una partida, victoria se pondra en falso para que funcione correctamente el bingo
+        VictoriayFalsoController.victoria = false;
+        int numberOfCardboards = Player.getInstance().getNumberOfCardboards();
+        Cardboard[] cardboards = new Cardboard[numberOfCardboards];
+        GridPane[] panes = new GridPane[] { firstCardboard, secondCardboard };
+        for (int i = 0; i < numberOfCardboards; i++) {
+            cardboards[i] = new Cardboard(new LineChecker());
+            fill(panes[i], cardboards[i].getSquares(), i + 1);
+        }
+        Player.getInstance().setCardboards(cardboards);
+        if (numberOfCardboards == 1){
+            secondCardboardView.setVisible(false);
+        }
+    }
+
+    private void initTableView() {
+        playerTable.setItems(players);
+        TableColumn<Player, String> nameCol = new TableColumn<>("Jugador");
+        TableColumn<Player, Integer> numCbCol = new TableColumn<>("# Cartones");
+        nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        numCbCol.setCellValueFactory(new PropertyValueFactory<>("numberOfCardboards"));
+        //noinspection unchecked
+        playerTable.getColumns().setAll(nameCol, numCbCol);
+    }
+
+    /**
+     * Mete a un jugador en la partida
+     * @param player Jugador a meter
+     */
+    @SuppressWarnings("WeakerAccess")
+    public void joinPlayer(Player player) {
+        if (null == players) {
+            players = FXCollections.observableArrayList();
+        }
+        players.add(player);
+    }
+
+    private void fill(GridPane cardboard, LinkedHashMap<String, BingoValue> squares, int numberCardboard) {
         generatedNumberLabel.setText(Integer.toString(43));
         int value = 0;
         for (int i = 0; i < 5; i++) {
@@ -89,41 +133,19 @@ public class PartidaController implements Initializable {
                 }
 
                 Button numberButton = new Button();
+                String letter = getLetter(j + 1);
+                String position = letter + (i + 1);
+                int number = squares.get(letter + (i + 1)).getNumber();
+
                 //Se toma el numero de la casilla creada en la clase Cardboard
-                numberButton.setText( Integer.toString( squares.get( getLetter(j+1)+Integer.toString(i+1) ).getNumber()) );
+                numberButton.setText(Integer.toString(number));
                 //Se establece
-                numberButton.setId(Integer.toString(numberCardboard) + getLetter(j+1) + Integer.toString(i+1));
+                numberButton.setId(numberCardboard + position);
+                // Propiedades personalizadas para facilitar la busqueda de informacion del boton
+                numberButton.setUserData(generateButtonProperites(numberCardboard, position));
                 //Agrega el CSS del boton
                 numberButton.getStyleClass().add(MARCADO);
-                numberButton.setOnAction(new EventHandler<ActionEvent>() {
-
-                    @Override public void handle(ActionEvent e) {
-                        System.out.println("button pressed = "+numberButton.idProperty().getValue());
-                        String position = numberButton.getId().substring(1);
-                        System.out.println("Posicion a marcar: "+position);
-                        String number = numberButton.getId().substring(0,1);
-                        if (true) { // VALIDACION SI ES EL NUMERO QUE SE GENERA EN LA PARTIDA
-                            System.out.println("Carton a marcar: " + number);
-                            if((number.equals("1")) && (cardboard != null)){
-                                //Se marca la casilla en la logica
-                                PartidaController.cardboard.checkIfPresent(position);
-                                //Se valida el bingo
-                                if(PartidaController.cardboard.checkBingo(position)){
-                                    VictoriayFalsoController.victoria = true;
-                                }
-                            }
-                            if((number.equals("2")) && (cardboard2 != null)){
-                                //Se marca la casilla en la logica
-                                PartidaController.cardboard2.checkIfPresent(position);
-                                //Se valida el bingo
-                                if(PartidaController.cardboard2.checkBingo(position)){
-                                    VictoriayFalsoController.victoria = true;
-                                }
-                            }
-                            numberButton.pseudoClassStateChanged(SELECTED_PSEUDO_CLASS,true);
-                        }
-                    }
-                });
+                numberButton.setOnAction(this::handleButtonClick);
                 cardboard.add(numberButton, j, i, 1, 1);
                 value++;
             }
@@ -142,7 +164,7 @@ public class PartidaController implements Initializable {
     }
 
     @FXML
-    private void victoria(ActionEvent event) throws Exception{
+    private void handleVictoryButtonClick(ActionEvent event) throws Exception{
 
             Parent root = FXMLLoader.load(getClass().getResource("/bingo/vistas/Victoria.fxml"));
             Scene scene = new Scene(root, 400, 200);
@@ -173,6 +195,41 @@ public class PartidaController implements Initializable {
             case 4: return "G";
             case 5: return "O";
             default: return "P";
+        }
+    }
+
+    /**
+     * Genera data personalizada para los botones del numero
+     * @param cardIndex Indice del carton al que pertenece el numero
+     * @param position  La posicion dentro del carton
+     * @return Propiedades a agregar
+     */
+    private Properties generateButtonProperites(Integer cardIndex, String position) {
+        Properties userData = new Properties(2);
+        userData.put("cardboard", cardIndex);
+        userData.put("position", position);
+
+        return userData;
+    }
+
+    /**
+     * Manejador de clicks en botones del carton.
+     * @param event Objeto del evento
+     */
+    private void handleButtonClick(ActionEvent event) {
+        Button button = (Button) event.getSource();
+        Properties userData = ((Properties) button.getUserData());
+        System.out.println("Clicked");
+        if (null != userData) {
+            // Solamente procesamos si no ha sido marcado
+            if (null == userData.get("checked")) {
+                System.out.println("Checking");
+                int cardboardIndex = ((Integer) userData.get("cardboard")) - 1;
+                String position = (String) userData.get("position");
+                Player.getInstance().getCardboard(cardboardIndex).checkIfPresent(position);
+                button.pseudoClassStateChanged(SELECTED_PSEUDO_CLASS, true);
+                userData.put("checked", true);
+            }
         }
     }
 }
