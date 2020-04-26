@@ -6,6 +6,8 @@
 package bingo.Controllers;
 
 import bingo.game.Player;
+import bingo.game.checker.FullChecker;
+import bingo.game.checker.LineChecker;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -84,6 +86,27 @@ public class MainMenuController implements Initializable {
         window.setScene(scene);
         window.setTitle("Bingo!");
         window.show();
+    }
+
+    @FXML
+    private void selectBingo(ActionEvent event){
+        String option = ((Button)(event.getSource())).getId();
+        System.out.println(option);
+        /*
+        AQUI SE DEBE ASIGNAR EL VALOR DE LA OPCION A CUAL SEA LA CLASE DE LA CONFIGURACION
+         */
+        switch (option){
+            case "lineBingo":
+                System.out.println("Bingo en linea");
+                PartidaController.bingoType = new LineChecker();
+                break;
+            case "fullBingo":
+                System.out.println("Bingo Full Cartonn");
+                PartidaController.bingoType = new FullChecker();
+                break;
+            default:
+                PartidaController.bingoType = new LineChecker();
+        }
     }
 
     public void handleCardboardSelection(ActionEvent event) {

@@ -8,6 +8,7 @@ package bingo.Controllers;
 import bingo.game.Player;
 import bingo.game.cardboard.BingoValue;
 import bingo.game.cardboard.Cardboard;
+import bingo.game.checker.BingoChecker;
 import bingo.game.checker.LineChecker;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
@@ -63,6 +64,8 @@ public class PartidaController implements Initializable {
     private static final PseudoClass SELECTED_PSEUDO_CLASS =
             PseudoClass.getPseudoClass("selected");
 
+    public static BingoChecker bingoType;
+
     /**
      * Mapa de jugadores
      * TODO: Estudiar como popularlo
@@ -91,7 +94,7 @@ public class PartidaController implements Initializable {
         Cardboard[] cardboards = new Cardboard[numberOfCardboards];
         GridPane[] panes = new GridPane[] { firstCardboard, secondCardboard };
         for (int i = 0; i < numberOfCardboards; i++) {
-            cardboards[i] = new Cardboard(new LineChecker());
+            cardboards[i] = new Cardboard(bingoType);
             fill(panes[i], cardboards[i].getSquares(), i + 1);
         }
         Player.getInstance().setCardboards(cardboards);
@@ -135,7 +138,7 @@ public class PartidaController implements Initializable {
                 Button numberButton = new Button();
                 String letter = getLetter(j + 1);
                 String position = letter + (i + 1);
-                int number = squares.get(letter + (i + 1)).getNumber();
+                int number = squares.get(position).getNumber();
 
                 //Se toma el numero de la casilla creada en la clase Cardboard
                 numberButton.setText(Integer.toString(number));
@@ -166,6 +169,20 @@ public class PartidaController implements Initializable {
     @FXML
     private void handleVictoryButtonClick(ActionEvent event) throws Exception{
 
+            //Se obtienen los cartones del player
+            Cardboard[] cardboards = Player.getInstance().getCardboards();
+            boolean bingo = false;
+            //Validacion de si hay bingo
+            for (Cardboard c : cardboards) {
+                if(c.checkBingo()){
+                    bingo = true;
+                    break;
+                }
+            }
+            if (bingo){
+                VictoriayFalsoController.victoria= true;
+            }
+
             Parent root = FXMLLoader.load(getClass().getResource("/bingo/vistas/Victoria.fxml"));
             Scene scene = new Scene(root, 400, 200);
             scene.getStylesheets().add("/bingo/vistas/MyStyles.css");
@@ -175,11 +192,6 @@ public class PartidaController implements Initializable {
             alerta.initStyle(StageStyle.UNDECORATED);
             alerta.setResizable(false);
             alerta.show();
-        /* Hay que meter la validacion del carton en este punto
-           if (true){
-                VictoriayFalsoController.victoria= true;
-            }
-            */
     }
 
 
@@ -205,7 +217,7 @@ public class PartidaController implements Initializable {
      * @return Propiedades a agregar
      */
     private Properties generateButtonProperites(Integer cardIndex, String position) {
-        Properties userData = new Properties(2);
+        Properties userData = new Properties();
         userData.put("cardboard", cardIndex);
         userData.put("position", position);
 
@@ -226,6 +238,9 @@ public class PartidaController implements Initializable {
                 System.out.println("Checking");
                 int cardboardIndex = ((Integer) userData.get("cardboard")) - 1;
                 String position = (String) userData.get("position");
+                /*
+                ES NECESARIO VALIDAR SI EL NUMERO QUE SALIO ES EL MISMO QUE TIENE EL CUADRO PARA PODER MARCARLO
+                 */
                 Player.getInstance().getCardboard(cardboardIndex).checkIfPresent(position);
                 button.pseudoClassStateChanged(SELECTED_PSEUDO_CLASS, true);
                 userData.put("checked", true);
