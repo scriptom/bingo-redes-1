@@ -9,6 +9,7 @@ import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.ResourceBundle;
 
+import bingo.game.BingoNumber;
 import bingo.game.cardboard.BingoValue;
 import bingo.game.cardboard.Cardboard;
 import bingo.game.checker.LineChecker;
@@ -51,6 +52,7 @@ public class PartidaController implements Initializable {
 
     public static Cardboard cardboard;
     public static Cardboard cardboard2;
+    public static int currentPlayingNumber = BingoNumber.getNumberToPlay();
 
     //Crear Pseudoclass para el css
     private static final String MARCADO = "marcado";
@@ -79,7 +81,7 @@ public class PartidaController implements Initializable {
     }
 
     public void llenar(GridPane cardboard, LinkedHashMap<String, BingoValue> squares, int numberCardboard) {
-        generatedNumberLabel.setText(Integer.toString(43));
+        generatedNumberLabel.setText(Integer.toString(currentPlayingNumber));
         int value = 0;
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
@@ -87,7 +89,6 @@ public class PartidaController implements Initializable {
                     value++;
                     continue;
                 }
-
                 Button numberButton = new Button();
                 //Se toma el numero de la casilla creada en la clase Cardboard
                 numberButton.setText( Integer.toString( squares.get( getLetter(j+1)+Integer.toString(i+1) ).getNumber()) );
@@ -99,10 +100,12 @@ public class PartidaController implements Initializable {
 
                     @Override public void handle(ActionEvent e) {
                         System.out.println("button pressed = "+numberButton.idProperty().getValue());
-                        String position = numberButton.getId().substring(1);
+                        String position = numberButton.getId();
                         System.out.println("Posicion a marcar: "+position);
                         String number = numberButton.getId().substring(0,1);
-                        if (true) { // VALIDACION SI ES EL NUMERO QUE SE GENERA EN LA PARTIDA
+                        String bingoNumber = numberButton.getId().substring(1,3);
+                        System.out.println("numero marcado ="+squares.get(bingoNumber).getNumber());
+                        if (squares.get(bingoNumber).getNumber() == currentPlayingNumber) { // VALIDACION SI ES EL NUMERO QUE SE GENERA EN LA PARTIDA
                             System.out.println("Carton a marcar: " + number);
                             if((number.equals("1")) && (cardboard != null)){
                                 //Se marca la casilla en la logica
