@@ -5,11 +5,7 @@
  */
 package bingo.Controllers;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
-
-import bingo.game.Bingo;
+import bingo.game.Player;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,17 +13,24 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-public class HomeController implements Initializable {
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-    }
+public class HomeController implements Initializable {
+    @FXML
+    private TextField playerName;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) { }
 
     @FXML
     private void goToLobby(ActionEvent event) throws IOException{
         System.out.println("Lobby");
+        createPlayer(playerName.getText());
         FXMLLoader carga = new FXMLLoader(getClass().getResource("/bingo/vistas/MainMenu.fxml"));
         Parent root = (Parent)carga.load();
         Scene scene = new Scene(root);
@@ -41,5 +44,9 @@ public class HomeController implements Initializable {
     @FXML
     private void salir(ActionEvent event){
         System.exit(0);
+    }
+
+    private void createPlayer(String name) {
+        Player.getInstance().setName(name);
     }
 }

@@ -19,7 +19,7 @@ public class Bingo extends Application {
         Cardboard cardboard = new Cardboard(new LineChecker());
 
         //Cardboard cardboard = new Cardboard(new FullChecker());
-        
+
         //Para mostrar por pantalla
         Scanner input = new Scanner(System.in);
         boolean keepPlaying = true;
@@ -44,14 +44,14 @@ public class Bingo extends Application {
             if(cardboard.checkBingo(position)){
                 keepPlaying = false;
             }
-        
+
         }
         System.out.println("");
         System.out.println("");
-        
+
         String print = cardboard.render();
         System.out.println(print);
-        
+
         System.out.println("BINGO MANAOOO, SI SIRVE ESTA VAINAAA");
         //for (BingoValue row: cardboard.valueRow(0)) cardboard.checkIfPresent(row);
 //        int row = 6;
@@ -66,7 +66,7 @@ public class Bingo extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        FXMLLoader carga = new FXMLLoader(getClass().getResource("/bingo/vistas/inicio.fxml"));
+        FXMLLoader carga = new FXMLLoader(getClass().getResource("/bingo/vistas/Inicio.fxml"));
         Parent root = carga.load();
         Scene scene = new Scene(root,600,400);
         scene.getStylesheets().add("/bingo/vistas/MyStyles.css");
