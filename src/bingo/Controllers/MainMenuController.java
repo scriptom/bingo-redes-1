@@ -66,8 +66,8 @@ public class MainMenuController implements Initializable {
     }
 
     @FXML
-    private void goToPartida(ActionEvent event) throws IOException{
-        Parent root = FXMLLoader.load(getClass().getResource("/bingo/vistas/Partida.fxml"));
+    private void goToPuertos(ActionEvent event) throws IOException{
+        Parent root = FXMLLoader.load(getClass().getResource("/bingo/vistas/Selecport.fxml"));
         Scene scene = new Scene(root);
         scene.getStylesheets().add("/bingo/vistas/MyStyles.css");
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
