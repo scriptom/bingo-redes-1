@@ -40,6 +40,17 @@ public class HomeController implements Initializable {
         window.setTitle("Lobby");
         window.show();
     }
+    @FXML
+    private void hola(ActionEvent event) throws IOException {
+        FXMLLoader carga = new FXMLLoader(getClass().getResource("/bingo/vistas/SelecPort.fxml"));
+        Parent root = (Parent)carga.load();
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add("/bingo/vistas/MyStyles.css");
+        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+        window.setScene(scene);
+        window.setTitle("Lobby");
+        window.show();
+    }
 
     @FXML
     private void salir(ActionEvent event){

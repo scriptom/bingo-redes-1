@@ -14,14 +14,14 @@
       </ImageView>
       <Pane layoutX="39.0" layoutY="30.0" prefHeight="335.0" prefWidth="540.0" styleClass="panelBlured" />
       <Button id="Red" layoutX="246.0" layoutY="280.0" mnemonicParsing="false" onAction="#salir" prefHeight="25.0" prefWidth="104.0" text="Salir" />
-      <Button id="Blue" layoutX="246.0" layoutY="247.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="104.0" text="Unirse" />
+      <Button id="Blue" layoutX="246.0" layoutY="247.0" mnemonicParsing="false" onAction="#hola" prefHeight="25.0" prefWidth="104.0" text="Unirse" />
       <Label layoutX="270.0" layoutY="147.0" text="Usuario">
          <font>
             <Font name="Georgia" size="16.0" />
          </font>
       </Label>
       <Button id="Green" layoutX="246.0" layoutY="211.0" mnemonicParsing="false" onAction="#goToLobby" prefHeight="25.0" prefWidth="104.0" text="Jugar!" />
-      <TextField layoutX="224.0" layoutY="173.0" fx:id="playerName" />
+      <TextField fx:id="playerName" layoutX="224.0" layoutY="173.0" />
       <Label id="Titulo" layoutX="200.0" layoutY="65.0" text="B I N G O!">
          <font>
             <Font name="Gabriola" size="70.0" />

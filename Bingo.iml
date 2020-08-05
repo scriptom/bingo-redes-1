@@ -7,7 +7,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="lib" level="project" />
-    <orderEntry type="library" name="javafx-swt" level="application" />
+    <orderEntry type="library" exported="" name="lib" level="project" />
+    <orderEntry type="library" exported="" name="jSerialComm-2.6.2" level="project" />
+    <orderEntry type="library" exported="" name="JavaFx" level="application" />
   </component>
 </module>
