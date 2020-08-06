@@ -41,7 +41,7 @@ public class HomeController implements Initializable {
         window.show();
     }
     @FXML
-    private void hola(ActionEvent event) throws IOException {
+    private void unirse(ActionEvent event) throws IOException {
         FXMLLoader carga = new FXMLLoader(getClass().getResource("/bingo/vistas/SelecPort.fxml"));
         Parent root = (Parent)carga.load();
         Scene scene = new Scene(root);
