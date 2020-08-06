@@ -27,12 +27,13 @@ public class SelecPortController implements Initializable {
     @FXML
     private TableColumn<SerialPort, String> puertos;  //el primer parametro de la columna corresponderia a la clase del puerto, el segundo permanece como string ya que es el tipo de dato que muestra la celda
     private ObservableList<SerialPort> portList;       //la lista deberia ser de objetos puerto
-    private SerialPort selectedPort[] = new SerialPort[2];     //en vez de string seria objeto del puerto
+    private SerialPort selectedPort[];     //en vez de string seria objeto del puerto
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         fillPortsList(); //se rellena el array de puertos
         initTableView(); //se inicializa la tabla con los puertos
+        selectedPort =  new SerialPort[2];
     }
 
     private void initTableView() {
