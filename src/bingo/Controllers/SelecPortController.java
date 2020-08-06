@@ -1,6 +1,6 @@
 package bingo.Controllers;
 
-import bingo.game.Player;
+import com.fazecast.jSerialComm.SerialPort;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,24 +11,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Stage;
 import javafx.scene.input.MouseButton;
-import javafx.util.Callback;
-import com.fazecast.jSerialComm.*;
+import javafx.stage.Stage;
 
-import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Observable;
 import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 public class SelecPortController implements Initializable {
@@ -46,8 +36,7 @@ public class SelecPortController implements Initializable {
     }
 
     private void initTableView() {
-         byte n = 0;
-        puertos.setCellValueFactory(c -> new SimpleStringProperty("COM" + (n))); //se debe cargar el puerto como valor de la celda y se pasa como parametro su propiedad nombre o lo que se vaya a mostrar OJO tambien cambia el metodo para el get ya que este es solo con string
+        puertos.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getSystemPortName())); //se debe cargar el puerto como valor de la celda y se pasa como parametro su propiedad nombre o lo que se vaya a mostrar OJO tambien cambia el metodo para el get ya que este es solo con string
         puertosTable.setItems(portList); //se asigna cada puerto para las celdas, ya que la llamada de arriba solo setea a nivel de interfaz
 
         this.puertosTable.setOnMouseClicked((event) -> {    //se configura la funcionalidad para seleccionar con click
