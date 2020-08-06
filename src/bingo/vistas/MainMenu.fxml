@@ -16,8 +16,8 @@
       <Pane layoutX="28.0" layoutY="11.0" maxHeight="406.0" maxWidth="684.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="381.0" prefWidth="564.0" styleClass="panelBlured" />
       <Button id="Red" layoutX="149.0" layoutY="356.0" mnemonicParsing="false" onAction="#goBack" prefHeight="25.0" prefWidth="104.0" text="volver" />
       <Button id="Green" layoutX="339.0" layoutY="356.0" mnemonicParsing="false" onAction="#goToPuertos" prefHeight="25.0" prefWidth="126.0" text="Seleccionar puerto" />
-      <Label layoutX="210.0" layoutY="224.0" text="1 carton" />
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffffffd0" height="265.0" layoutX="170.0" layoutY="83.0" stroke="BLACK" strokeType="INSIDE" width="260.0" />
+      <Label layoutX="210.0" layoutY="224.0" text="1 carton" />
       <Label layoutX="237.0" layoutY="95.0" text="Configuración">
          <font>
             <Font name="System Bold" size="19.0" />

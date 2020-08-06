@@ -106,6 +106,13 @@
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
+                     <children>
+                        <ImageView disable="true" fitHeight="35.0" fitWidth="61.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                           <image>
+                              <Image url="@../imagenes/logo%20ucab.jpg" />
+                           </image>
+                        </ImageView>
+                     </children>
                   </GridPane>
                </children>
             </Pane>
