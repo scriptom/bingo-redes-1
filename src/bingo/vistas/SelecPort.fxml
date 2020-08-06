@@ -43,7 +43,7 @@
                      </children>
                   </VBox>
                   <Button id="Green" layoutX="479.0" layoutY="336.0" mnemonicParsing="false" onAction="#goToPartida" text="Iniciar partida" />
-                  <Button id="Green" layoutY="336.0" mnemonicParsing="false" onAction="#goBack" prefHeight="25.0" prefWidth="76.0" text="Salir" />
+                  <Button id="Green" layoutY="336.0" mnemonicParsing="false" onAction="#goBack" prefHeight="25.0" prefWidth="76.0" text="volver" />
                </children></Pane>
          </children></Pane>
    </children>

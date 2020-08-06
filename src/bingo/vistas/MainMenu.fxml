@@ -23,7 +23,7 @@
                   <Font name="System Bold" size="19.0" />
                </font>
             </Label>
-            <Button id="Red" layoutY="347.0" mnemonicParsing="false" onAction="#goBack" prefHeight="25.0" prefWidth="104.0" text="Salir" />
+            <Button id="Red" layoutY="347.0" mnemonicParsing="false" onAction="#goBack" prefHeight="25.0" prefWidth="104.0" text="volver" />
             <Button id="Green" layoutX="470.0" layoutY="347.0" mnemonicParsing="false" onAction="#goToPuertos" prefHeight="25.0" prefWidth="126.0" text="Seleccionar puerto" />
          </children></Pane>
       <Label layoutX="210.0" layoutY="224.0" text="1 carton" />
