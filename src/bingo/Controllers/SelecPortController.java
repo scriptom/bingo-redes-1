@@ -13,8 +13,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
+import bingo.game.Player;
 
 import java.io.IOException;
 import java.net.URL;
@@ -29,11 +31,16 @@ public class SelecPortController implements Initializable {
     private ObservableList<SerialPort> portList;       //la lista deberia ser de objetos puerto
     private SerialPort selectedPort[];     //en vez de string seria objeto del puerto
 
+    @FXML
+    private TextField playerName;
+
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         fillPortsList(); //se rellena el array de puertos
         initTableView(); //se inicializa la tabla con los puertos
         selectedPort =  new SerialPort[2];
+        createPlayer(playerName.getText());
     }
 
     private void initTableView() {
@@ -64,12 +71,24 @@ public class SelecPortController implements Initializable {
 
     }
 
+    @FXML
+    private void goBack(ActionEvent event) throws Exception {
+        Parent root = FXMLLoader.load(getClass().getResource("/bingo/vistas/MainMenu.fxml"));
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add("/bingo/vistas/MyStyles.css");
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(scene);
+        window.setTitle("Bingo!");
+        window.show();
+    }
+
     public void fillPortsList() { //se rellena la lista con los puertos
         portList = FXCollections.observableArrayList(SerialPort.getCommPorts());
     }
 
     @FXML
     private void goToPartida(ActionEvent event) throws IOException { //se va a la vista del juego
+        createPlayer(playerName.getText());
         Parent root = FXMLLoader.load(getClass().getResource("/bingo/vistas/Partida.fxml"));
         Scene scene = new Scene(root);
         scene.getStylesheets().add("/bingo/vistas/MyStyles.css");
@@ -78,6 +97,10 @@ public class SelecPortController implements Initializable {
         window.setTitle("Jugando Bingo!");
         window.show();
         PartidaController.ventana = window;
+    }
+
+    private void createPlayer(String name) {
+        Player.getInstance().setName(name);
     }
 
 }
