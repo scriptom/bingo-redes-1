@@ -14,6 +14,7 @@
                   <Image url="@../imagenes/bingo.jpg" />
                </image>
             </ImageView>
+            <Pane layoutX="20.0" layoutY="14.0" prefHeight="381.0" prefWidth="561.0" styleClass="panelBlured" />
             <Label layoutX="62.0" layoutY="53.0" text="Seleccione un Puerto Serial para utilizar" textFill="#ff1919">
                <font>
                   <Font size="28.0" />
