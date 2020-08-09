@@ -5,7 +5,8 @@
  */
 package bingo.Controllers;
 
-import bingo.game.Player;
+import bingo.game.BingoGame;
+import bingo.game.checker.BingoChecker;
 import bingo.game.checker.FullChecker;
 import bingo.game.checker.LineChecker;
 import javafx.event.ActionEvent;
@@ -27,22 +28,31 @@ import java.util.ResourceBundle;
  *
  * @author Cesar
  */
-public class MainMenuController implements Initializable {
-
+public class MainMenuController implements Initializable, Controller {
+    private BingoChecker bingoChecker;
+    private BingoGame bingoGame;
+    private int maxCardboards;
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        bingoGame = BingoGame.getInstance();
     }
 
     @FXML
     private void goToPuertos(ActionEvent event) throws IOException{
-        Parent root = FXMLLoader.load(getClass().getResource("/bingo/vistas/Selecport.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/bingo/vistas/Selecport.fxml"));
+        Parent root = loader.load();
         Scene scene = new Scene(root);
         scene.getStylesheets().add("/bingo/vistas/MyStyles.css");
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+        // Se supone que ya tenemos un bingo seleccionado... no?
+        bingoGame.setBingoChecker(bingoChecker);
+        bingoGame.setMaxCardboards(maxCardboards);
+        // Pasamos de vuelta el inicio del bingo
+        SelecPortController controller = loader.getController();
+        controller.setBingoGame(bingoGame);
         window.setScene(scene);
         window.setTitle("Jugando Bingo!");
         window.show();
-        PartidaController.ventana = window;
     }
 
     @FXML
@@ -66,20 +76,21 @@ public class MainMenuController implements Initializable {
         switch (option){
             case "lineBingo":
                 System.out.println("Bingo en linea");
-                PartidaController.bingoType = new LineChecker();
+                bingoChecker = new LineChecker();
                 break;
             case "fullBingo":
                 System.out.println("Bingo Full Cartonn");
-                PartidaController.bingoType = new FullChecker();
+                bingoChecker = new FullChecker();
                 break;
-            default:
-                PartidaController.bingoType = new LineChecker();
         }
     }
 
     public void handleCardboardSelection(ActionEvent event) {
         Button button = (Button) event.getSource();
-        int numberOfCardboards = Integer.parseInt(((String) button.getUserData()));
-        Player.getInstance().setNumberOfCardboards(numberOfCardboards);
+        maxCardboards = Integer.parseInt(((String) button.getUserData()));
+    }
+
+    public void setBingoGame(BingoGame bingoGame) {
+        this.bingoGame = bingoGame;
     }
 }

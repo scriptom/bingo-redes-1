@@ -2,9 +2,10 @@ package bingo.game.cardboard;
 
 import bingo.game.checker.BingoChecker;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class Cardboard {
+public class Cardboard implements Serializable {
     /**
      * Lista de cuadros en el carton
      */

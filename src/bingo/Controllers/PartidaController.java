@@ -5,14 +5,13 @@
  */
 package bingo.Controllers;
 
+import bingo.game.BingoGame;
 import bingo.game.Player;
 import bingo.game.cardboard.BingoValue;
 import bingo.game.cardboard.Cardboard;
-import bingo.game.checker.BingoChecker;
-import bingo.game.checker.LineChecker;
+import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.beans.property.SimpleListProperty;
 import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -36,10 +35,10 @@ import java.net.URL;
 import java.util.*;
 
 /**
- *
  * @author Cesar
  */
-public class PartidaController implements Initializable {
+public class PartidaController implements Initializable, Controller {
+    private BingoGame bingoGame;
     @FXML
     private Label lblPlayerName;
     @FXML
@@ -51,10 +50,12 @@ public class PartidaController implements Initializable {
     @FXML
     private Pane secondCardboardView;
     @FXML
-    static Stage ventana;
+    private Stage ventana;
 
     @FXML
     private Label generatedNumberLabel;
+
+    private ListProperty<Player> playerListProperty;
 
     private SimpleIntegerProperty generatedNumber = new SimpleIntegerProperty(this, "generatedNumber");
 
@@ -64,65 +65,44 @@ public class PartidaController implements Initializable {
     private static final PseudoClass SELECTED_PSEUDO_CLASS =
             PseudoClass.getPseudoClass("selected");
 
-    public static BingoChecker bingoType;
-
-    /**
-     * Mapa de jugadores
-     * TODO: Estudiar como popularlo
-     */
-    private ObservableList<Player> players;
-
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        bingoGame = BingoGame.getInstance();
+        playerListProperty = new SimpleListProperty<>(bingoGame.getPlayers());
         prepareGame();
-        joinPlayer(Player.getInstance());
         initGameView();
     }
 
     private void initGameView() {
         initTableView();
-        lblPlayerName.setText(Player.getInstance().getName());
+//        lblPlayerName.setText(Player.getInstance().getName());
     }
 
     private void prepareGame() {
-        // Cada vez que se inicie una partida, victoria se pondra en falso para que funcione correctamente el bingo
-        VictoriayFalsoController.victoria = false;
-        int numberOfCardboards = Player.getInstance().getNumberOfCardboards();
-        Cardboard[] cardboards = new Cardboard[numberOfCardboards];
-        GridPane[] panes = new GridPane[] { firstCardboard, secondCardboard };
-        for (int i = 0; i < numberOfCardboards; i++) {
-            cardboards[i] = new Cardboard(bingoType);
+        int maxCardboards = bingoGame.getMaxCardboards();
+        Cardboard[] cardboards = new Cardboard[maxCardboards];
+        GridPane[] panes = new GridPane[]{firstCardboard, secondCardboard};
+        for (int i = 0; i < maxCardboards; i++) {
+            cardboards[i] = new Cardboard(bingoGame.getBingoChecker());
             fill(panes[i], cardboards[i].getSquares(), i + 1);
         }
         Player.getInstance().setCardboards(cardboards);
-        if (numberOfCardboards == 1){
+        if (maxCardboards == 1) {
             secondCardboardView.setVisible(false);
         }
     }
 
     private void initTableView() {
-        playerTable.setItems(players);
+        playerTable.itemsProperty().bindBidirectional(playerListProperty);
         TableColumn<Player, String> nameCol = new TableColumn<>("Jugador");
         TableColumn<Player, Integer> numCbCol = new TableColumn<>("# Cartones");
         nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
         numCbCol.setCellValueFactory(new PropertyValueFactory<>("numberOfCardboards"));
         //noinspection unchecked
         playerTable.getColumns().setAll(nameCol, numCbCol);
-    }
-
-    /**
-     * Mete a un jugador en la partida
-     * @param player Jugador a meter
-     */
-    @SuppressWarnings("WeakerAccess")
-    public void joinPlayer(Player player) {
-        if (null == players) {
-            players = FXCollections.observableArrayList();
-        }
-        players.add(player);
     }
 
     private void fill(GridPane cardboard, LinkedHashMap<String, BingoValue> squares, int numberCardboard) {
@@ -145,7 +125,7 @@ public class PartidaController implements Initializable {
                 //Se establece
                 numberButton.setId(numberCardboard + position);
                 // Propiedades personalizadas para facilitar la busqueda de informacion del boton
-                numberButton.setUserData(generateButtonProperites(numberCardboard, position));
+                numberButton.setUserData(generateButtonProperties(numberCardboard, position));
                 //Agrega el CSS del boton
                 numberButton.getStyleClass().add(MARCADO);
                 numberButton.setOnAction(this::handleButtonClick);
@@ -167,56 +147,63 @@ public class PartidaController implements Initializable {
     }
 
     @FXML
-    private void handleVictoryButtonClick(ActionEvent event) throws Exception{
-
-            //Se obtienen los cartones del player
-            Cardboard[] cardboards = Player.getInstance().getCardboards();
-            boolean bingo = false;
-            //Validacion de si hay bingo
-            for (Cardboard c : cardboards) {
-                if(c.checkBingo()){
-                    bingo = true;
-                    break;
-                }
+    private void handleVictoryButtonClick(ActionEvent event) throws Exception {
+        Cardboard[] cardboards = Player.getInstance().getCardboards();
+        boolean bingo = false;
+        //Validacion de si hay bingo
+        for (Cardboard c : cardboards) {
+            if (c.checkBingo()) {
+                bingo = true;
+                break;
             }
-            if (bingo){
-                VictoriayFalsoController.victoria= true;
-            }
-
-            Parent root = FXMLLoader.load(getClass().getResource("/bingo/vistas/Victoria.fxml"));
-            Scene scene = new Scene(root, 400, 200);
-            scene.getStylesheets().add("/bingo/vistas/MyStyles.css");
-            Stage alerta = new Stage(StageStyle.TRANSPARENT);
-            alerta.setScene(scene);
-            scene.setFill(Color.TRANSPARENT);
-            alerta.initStyle(StageStyle.UNDECORATED);
-            alerta.setResizable(false);
-            alerta.show();
+        }
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/bingo/vistas/Victoria.fxml"));
+        Parent root = loader.load();
+        VictoriayFalsoController controller = loader.getController();
+        controller.setInvoker(this);
+        controller.setBingoGame(bingoGame);
+        System.out.println("Cambiando Victoria a " + bingo);
+        controller.setVictoria(bingo);
+        Scene scene = new Scene(root, 400, 200);
+        scene.getStylesheets().add("/bingo/vistas/MyStyles.css");
+        Stage alerta = new Stage(StageStyle.TRANSPARENT);
+        alerta.setScene(scene);
+        scene.setFill(Color.TRANSPARENT);
+        alerta.initStyle(StageStyle.UNDECORATED);
+        alerta.setResizable(false);
+        alerta.show();
     }
 
 
     /**
-    * @param index numero de la columna en la que se encuentra la iteracion
-    * @return  Letra la columna en la que se esta iterando
+     * @param index numero de la columna en la que se encuentra la iteracion
+     * @return Letra la columna en la que se esta iterando
      */
-    private String getLetter(int index){
-        switch (index){
-            case 1: return "B";
-            case 2: return "I";
-            case 3: return "N";
-            case 4: return "G";
-            case 5: return "O";
-            default: return "P";
+    private String getLetter(int index) {
+        switch (index) {
+            case 1:
+                return "B";
+            case 2:
+                return "I";
+            case 3:
+                return "N";
+            case 4:
+                return "G";
+            case 5:
+                return "O";
+            default:
+                return "P";
         }
     }
 
     /**
      * Genera data personalizada para los botones del numero
+     *
      * @param cardIndex Indice del carton al que pertenece el numero
      * @param position  La posicion dentro del carton
      * @return Propiedades a agregar
      */
-    private Properties generateButtonProperites(Integer cardIndex, String position) {
+    private Properties generateButtonProperties(Integer cardIndex, String position) {
         Properties userData = new Properties();
         userData.put("cardboard", cardIndex);
         userData.put("position", position);
@@ -226,6 +213,7 @@ public class PartidaController implements Initializable {
 
     /**
      * Manejador de clicks en botones del carton.
+     *
      * @param event Objeto del evento
      */
     private void handleButtonClick(ActionEvent event) {
@@ -241,10 +229,25 @@ public class PartidaController implements Initializable {
                 /*
                 ES NECESARIO VALIDAR SI EL NUMERO QUE SALIO ES EL MISMO QUE TIENE EL CUADRO PARA PODER MARCARLO
                  */
-                Player.getInstance().getCardboard(cardboardIndex).checkIfPresent(position);
                 button.pseudoClassStateChanged(SELECTED_PSEUDO_CLASS, true);
                 userData.put("checked", true);
             }
         }
+    }
+
+    public BingoGame getBingoGame() {
+        return bingoGame;
+    }
+
+    public void setBingoGame(BingoGame bingoGame) {
+        this.bingoGame = bingoGame;
+    }
+
+    public Stage getVentana() {
+        return ventana;
+    }
+
+    public void setVentana(Stage ventana) {
+        this.ventana = ventana;
     }
 }
