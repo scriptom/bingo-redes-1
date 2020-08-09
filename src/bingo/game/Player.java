@@ -50,12 +50,6 @@ public class Player implements Sender, Receiver, Serializable {
     private BingoGame game;
 
     /**
-     * Determina si este jugador está buscando partida
-     */
-    private boolean seekingGame;
-
-
-    /**
      * Lista de mensajes pendientes por mandar.
      */
     private Queue<Message> pendingMessages;
@@ -287,10 +281,7 @@ public class Player implements Sender, Receiver, Serializable {
                         default:
                             System.out.println("message.getMessageType() = " + message.getMessageType());
                     }
-                    // Verificamos si dejamos de buscar por un juego
-                    if (seekingGame && null != game) {
-                        seekingGame = false;
-                    }
+
                 }
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
@@ -333,10 +324,6 @@ public class Player implements Sender, Receiver, Serializable {
         send(message, writingSerialPort);
     }
 
-    public boolean isSeekingGame() {
-        return seekingGame;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -366,6 +353,13 @@ public class Player implements Sender, Receiver, Serializable {
         return message.getSenderSerialPortName().equals(writingSerialPort.toString());
     }
 
+    /**
+     * Convierte una lista (List) de jugadores (Player) a un string con los nombres delimitados por "$"
+     * Ej: ["TOMAS","CESAR","DANIEL","ROBERT"] => "TOMAS$CESAR$DANIEL$ROBERT"
+     *
+     * Esto es necesario porque no se puede enviar un Object[] serializado y luego hacerle casting a String[] de nuevo
+     * @return
+     */
     private String namesHelper() {
         String[] names = new String[game.getPlayers().size()];
         for (int i = 0; i < names.length; i++) {
