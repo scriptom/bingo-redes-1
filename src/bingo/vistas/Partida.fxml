@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
 
-<Pane maxHeight="408.0" maxWidth="684" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bingo.Controllers.PartidaController">
+<Pane maxHeight="408.0" maxWidth="684" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bingo.Controllers.PartidaController">
    <children>
       <Pane id="redondeo" layoutX="2.0" layoutY="4.0" prefHeight="154.0" prefWidth="592.0" styleClass="panelBlured" />
       <ImageView fitHeight="410.0" fitWidth="732.0" layoutX="-78.0" pickOnBounds="true" preserveRatio="true">
@@ -123,6 +129,6 @@
          </image>
       </ImageView>
       <Label fx:id="generatedNumberLabel" alignment="TOP_CENTER" layoutX="290.0" layoutY="45.0" prefHeight="56.0" prefWidth="73.0" style="-fx-font-size: 40" />
-      <Button id="Green" layoutX="455.0" layoutY="69.0" mnemonicParsing="false" text="Usame Papi" />
+      <Button id="Green" fx:id="changeNumber" layoutX="455.0" layoutY="69.0" mnemonicParsing="false" onAction="#changeBingoNumber" text="Usame Papi" />
    </children>
 </Pane>

@@ -32,6 +32,7 @@ public class HomeController implements Initializable, Controller {
         // Objeto de la partida a pasar a través de los controladores
         BingoGame game = BingoGame.getInstance();
         game.setHostInstance(true);
+        game.generateNewNumber();
         MainMenuController controller = carga.getController();
         controller.setBingoGame(game);
         Scene scene = new Scene(root);

@@ -1,5 +1,6 @@
 package bingo.game;
 
+import bingo.Controllers.PartidaController;
 import bingo.comm.Message;
 import bingo.comm.Receiver;
 import bingo.comm.Sender;
@@ -207,13 +208,15 @@ public class Player implements Sender, Receiver, Serializable {
                                 Message cardboardNumberMessage = new Message(writingSerialPort.toString(), TWO_CARDBOARDS, game.getMaxCardboards() == 2);
                                 // Tipo de bingo
                                 Message bingoCheckerMessage = new Message(writingSerialPort.toString(), FULL_BINGO, game.getBingoChecker() instanceof FullChecker);
+                                // Se genera y envia un numero en el bingo
+                                Message bingoNumber = new Message(writingSerialPort.toString(), NEXT_NUMBER, game.getCurrentNumber());
                                 // Luego le informamos de quién es el host
                                 Message hostMessage = new Message(writingSerialPort.toString(), HOST_PLAYER, game.getHostPlayer().getName());
                                 // Le damos la lista completa de jugadores
                                 String joined = namesHelper();
                                 Message playersMessage = new Message(writingSerialPort.toString(), CURRENT_PLAYERS, joined);
                                 // Ahora mandamos todos los datos
-                                for (Message m : new Message[]{cardboardNumberMessage, bingoCheckerMessage, hostMessage, playersMessage}) {
+                                for (Message m : new Message[]{cardboardNumberMessage, bingoCheckerMessage, bingoNumber, hostMessage, playersMessage}) {
                                     send(m, writingSerialPort);
                                 }
                             } else {
@@ -228,6 +231,8 @@ public class Player implements Sender, Receiver, Serializable {
                         case HAS_BINGO:
                             // Ya ganó. TODO: Crear trigger para esto.
                             String winnerName = (String) message.getContents();
+                            PartidaController.showBingoAlert(winnerName);
+                            System.out.println("GANADOR: "+winnerName);
                             break;
                         case CURRENT_PLAYERS:
                             if (null == game) {

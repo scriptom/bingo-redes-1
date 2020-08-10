@@ -35,6 +35,8 @@ import javafx.stage.StageStyle;
 import java.net.URL;
 import java.util.*;
 
+import static bingo.comm.Message.NEXT_NUMBER;
+
 /**
  * @author Cesar
  */
@@ -56,9 +58,10 @@ public class PartidaController implements Initializable, Controller {
     @FXML
     private Label generatedNumberLabel;
 
-    private ListProperty<Player> playerListProperty;
+    @FXML
+    private Button changeNumber;
 
-    private SimpleIntegerProperty generatedNumber = new SimpleIntegerProperty(this, "generatedNumber");
+    private ListProperty<Player> playerListProperty;
 
     //Crear Pseudoclass para el css
     private static final String MARCADO = "marcado";
@@ -73,6 +76,10 @@ public class PartidaController implements Initializable, Controller {
     public void initialize(URL url, ResourceBundle rb) {
         bingoGame = BingoGame.getInstance();
         playerListProperty = new SimpleListProperty<>(bingoGame.getPlayers());
+        generatedNumberLabel.setText(Integer.toString(bingoGame.getCurrentNumber()));
+        if (!bingoGame.isHostInstance()) {
+            changeNumber.setVisible(false);
+        }
         prepareGame();
         initGameView();
     }
@@ -107,7 +114,6 @@ public class PartidaController implements Initializable, Controller {
     }
 
     private void fill(GridPane cardboard, LinkedHashMap<String, BingoValue> squares, int numberCardboard) {
-        generatedNumberLabel.setText(Integer.toString(43));
         int value = 0;
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
@@ -156,13 +162,14 @@ public class PartidaController implements Initializable, Controller {
             if (c.checkBingo()) {
                 System.out.println("BINGO");
                 bingo = true;
+                Player player = Player.getInstance();
+                Message message = new Message(player.getWritingSerialPort().toString(),Message.HAS_BINGO);
+                message.setContents(player.getName());
+                player.send(message, player.getWritingSerialPort());
+                //MOSTRAR VISTA DE BINGO CORRECTO
                 break;
             }
         }
-        //VALIDAR QUE SE MUESTRE ESTA VISTA SOLO CUANDO SE GANA
-        Player player = Player.getInstance();
-        player.send(new Message("50",Message.NEXT_NUMBER), player.getWritingSerialPort());
-        //bingoGame.setCurrentNumber(50);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/bingo/vistas/Victoria.fxml"));
         Parent root = loader.load();
         VictoriayFalsoController controller = loader.getController();
@@ -180,6 +187,31 @@ public class PartidaController implements Initializable, Controller {
         alerta.show();
     }
 
+    /**
+     * Funcion para cambiar el numero del Bingo enviado por el host
+     * @param number Texto del numero
+     */
+    public static void setGeneratedNumberLabel(String number){
+        System.out.println("SE CAMBIA EL NUMERO A:"+number);
+    }
+
+
+    /**
+     * Funcion para mostrar la alerta de que otro jugador canta Bingo
+     * @param name Nombre del jugador
+     */
+    public static void showBingoAlert(String name){
+        //COLOCAR CODIGO PARA MOSTRAR NOTIFICACION DE QUE OTRO JUGADOR TUVO BINGO
+    }
+
+    @FXML
+    public void changeBingoNumber(ActionEvent event) throws Exception{
+        bingoGame.generateNewNumber();
+        generatedNumberLabel.setText(Integer.toString(bingoGame.getCurrentNumber()));
+        Player player = Player.getInstance();
+        Message bingoNumber = new Message(player.getWritingSerialPort().toString(), NEXT_NUMBER, bingoGame.getCurrentNumber());
+        player.send(bingoNumber, player.getWritingSerialPort());
+    }
 
     /**
      * @param index numero de la columna en la que se encuentra la iteracion
@@ -236,9 +268,14 @@ public class PartidaController implements Initializable, Controller {
                 ES NECESARIO VALIDAR SI EL NUMERO QUE SALIO ES EL MISMO QUE TIENE EL CUADRO PARA PODER MARCARLO
                  */
                 Cardboard cardboard = Player.getInstance().getCardboard(cardboardIndex);
-                cardboard.checkIfPresent(position);
-                button.pseudoClassStateChanged(SELECTED_PSEUDO_CLASS, true);
-                userData.put("checked", true);
+                if(cardboard.getNumber(position) == Integer.valueOf(generatedNumberLabel.getText())){
+                    cardboard.checkIfPresent(position);
+                    button.pseudoClassStateChanged(SELECTED_PSEUDO_CLASS, true);
+                    userData.put("checked", true);
+                    System.out.println("Value checked");
+                }else{
+                    System.out.println("Cant check value");
+                }
             }
         }
     }
