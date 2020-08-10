@@ -123,5 +123,6 @@
          </image>
       </ImageView>
       <Label fx:id="generatedNumberLabel" alignment="TOP_CENTER" layoutX="290.0" layoutY="45.0" prefHeight="56.0" prefWidth="73.0" style="-fx-font-size: 40" />
+      <Button id="Green" layoutX="455.0" layoutY="69.0" mnemonicParsing="false" text="Usame Papi" />
    </children>
 </Pane>
