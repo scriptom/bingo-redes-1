@@ -97,6 +97,7 @@ public class SelecPortController implements Initializable {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/bingo/vistas/Partida.fxml"));
         Parent root = loader.load();
         PartidaController controller = loader.getController();
+        controller.setBingoGame(bingoGame);
         Scene scene = new Scene(root);
         scene.getStylesheets().add("/bingo/vistas/MyStyles.css");
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();

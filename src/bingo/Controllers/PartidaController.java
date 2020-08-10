@@ -5,6 +5,7 @@
  */
 package bingo.Controllers;
 
+import bingo.comm.Message;
 import bingo.game.BingoGame;
 import bingo.game.Player;
 import bingo.game.cardboard.BingoValue;
@@ -153,10 +154,15 @@ public class PartidaController implements Initializable, Controller {
         //Validacion de si hay bingo
         for (Cardboard c : cardboards) {
             if (c.checkBingo()) {
+                System.out.println("BINGO");
                 bingo = true;
                 break;
             }
         }
+        //VALIDAR QUE SE MUESTRE ESTA VISTA SOLO CUANDO SE GANA
+        Player player = Player.getInstance();
+        player.send(new Message("50",Message.NEXT_NUMBER), player.getWritingSerialPort());
+        //bingoGame.setCurrentNumber(50);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/bingo/vistas/Victoria.fxml"));
         Parent root = loader.load();
         VictoriayFalsoController controller = loader.getController();
@@ -229,6 +235,8 @@ public class PartidaController implements Initializable, Controller {
                 /*
                 ES NECESARIO VALIDAR SI EL NUMERO QUE SALIO ES EL MISMO QUE TIENE EL CUADRO PARA PODER MARCARLO
                  */
+                Cardboard cardboard = Player.getInstance().getCardboard(cardboardIndex);
+                cardboard.checkIfPresent(position);
                 button.pseudoClassStateChanged(SELECTED_PSEUDO_CLASS, true);
                 userData.put("checked", true);
             }

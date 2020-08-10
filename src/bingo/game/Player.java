@@ -222,6 +222,7 @@ public class Player implements Sender, Receiver, Serializable {
                             break;
                         case NEXT_NUMBER:
                             game.setCurrentNumber((int) message.getContents());
+                            System.out.println("MENSAJE:"+message.getContents());
                             retransmitMessage(message);
                             break;
                         case HAS_BINGO:

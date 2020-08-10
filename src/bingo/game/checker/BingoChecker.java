@@ -48,7 +48,7 @@ public abstract class BingoChecker {
      * @return Si existe bingo en la jugada
      */
     public boolean bingo(){
-        return this. hasBingo;
+        return this.hasBingo;
     }
     
 }
