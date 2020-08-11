@@ -106,11 +106,9 @@ public class PartidaController implements Initializable, Controller {
     private void initTableView() {
         playerTable.itemsProperty().bindBidirectional(playerListProperty);
         TableColumn<Player, String> nameCol = new TableColumn<>("Jugador");
-        TableColumn<Player, Integer> numCbCol = new TableColumn<>("# Cartones");
         nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
-        numCbCol.setCellValueFactory(new PropertyValueFactory<>("numberOfCardboards"));
         //noinspection unchecked
-        playerTable.getColumns().setAll(nameCol, numCbCol);
+        playerTable.getColumns().setAll(nameCol);
     }
 
     private void fill(GridPane cardboard, LinkedHashMap<String, BingoValue> squares, int numberCardboard) {

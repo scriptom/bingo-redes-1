@@ -12,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -36,15 +37,29 @@ public class SelecPortController implements Initializable {
     private ObservableList<SerialPort> portList;       //la lista deberia ser de objetos puerto
     private SerialPort writingSerialPort;
     private SerialPort readingSerialPort;
-
+//Segunda lista de puertos
+    @FXML
+    private TableView<SerialPort> puertosTable1;
+    @FXML
+    private TableColumn<SerialPort, String> puertos1;  //el primer parametro de la columna corresponderia a la clase del puerto, el segundo permanece como string ya que es el tipo de dato que muestra la celda
+    @FXML
+    private TableColumn<SerialPort, String> disponibilidad1;
     @FXML
     private TextField playerName;
+    @FXML
+    private Button siguiente;
 
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         fillPortsList(); //se rellena el array de puertos
         initTableView(); //se inicializa la tabla con los puertos
+        initTableView2(); //se inicializa la tabla con los puertos
+        BingoGame game = BingoGame.getInstance();
+        if( !game.isHostInstance()){
+            siguiente.setText("Unirse");
+            siguiente.setId("Blue");
+        }
     }
 
     private void initTableView() {
@@ -54,26 +69,51 @@ public class SelecPortController implements Initializable {
 
         this.puertosTable.setOnMouseClicked((event) -> {    //se configura la funcionalidad para seleccionar con click
             if (event.getButton().equals(MouseButton.PRIMARY)) {
-                if (readingSerialPort == null) {
+
                     readingSerialPort = this.puertosTable.getSelectionModel().getSelectedItem(); //en ves de cast a string es a puerto para obtener el puerto seleccionado
-                } else {
-                    writingSerialPort = this.puertosTable.getSelectionModel().getSelectedItem(); //en ves de cast a string es a puerto para obtener el puerto seleccionado
-                }
+
             }
             System.out.println("lectura: " + readingSerialPort);
+
+        });
+    }
+
+    private void initTableView2() {
+        puertos1.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getSystemPortName())); //se debe cargar el puerto como valor de la celda y se pasa como parametro su propiedad nombre o lo que se vaya a mostrar OJO tambien cambia el metodo para el get ya que este es solo con string
+        disponibilidad1.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().isOpen() ? "NO" : "SI"));
+        puertosTable1.setItems(portList); //se asigna cada puerto para las celdas, ya que la llamada de arriba solo setea a nivel de interfaz
+
+        this.puertosTable1.setOnMouseClicked((event) -> {    //se configura la funcionalidad para seleccionar con click
+            if (event.getButton().equals(MouseButton.PRIMARY)) {
+                    writingSerialPort = this.puertosTable1.getSelectionModel().getSelectedItem(); //en ves de cast a string es a puerto para obtener el puerto seleccionado
+            }
+
             System.out.println("escritura: " + writingSerialPort);
         });
     }
 
     @FXML
     private void goBack(ActionEvent event) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/bingo/vistas/MainMenu.fxml"));
-        Scene scene = new Scene(root);
-        scene.getStylesheets().add("/bingo/vistas/MyStyles.css");
-        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        window.setScene(scene);
-        window.setTitle("Bingo!");
-        window.show();
+        BingoGame game = BingoGame.getInstance();
+        if(game.isHostInstance()) {
+            Parent root = FXMLLoader.load(getClass().getResource("/bingo/vistas/MainMenu.fxml"));
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add("/bingo/vistas/MyStyles.css");
+            Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            window.setScene(scene);
+            window.setTitle("Bingo!");
+            window.show();
+        }
+        else{
+            FXMLLoader carga = new FXMLLoader(getClass().getResource("/bingo/vistas/Inicio.fxml"));
+            Parent root = carga.load();
+            Scene scene = new Scene(root,600,400);
+            scene.getStylesheets().add("/bingo/vistas/MyStyles.css");
+            Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            window.setScene(scene);
+            window.setTitle("Bingo!");
+            window.show();
+        }
     }
 
     public void fillPortsList() { //se rellena la lista con los puertos
