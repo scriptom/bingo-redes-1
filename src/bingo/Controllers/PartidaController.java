@@ -10,9 +10,7 @@ import bingo.game.BingoGame;
 import bingo.game.Player;
 import bingo.game.cardboard.BingoValue;
 import bingo.game.cardboard.Cardboard;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.*;
 import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -31,6 +29,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.StringConverter;
 
 import java.net.URL;
 import java.util.*;
@@ -76,7 +75,6 @@ public class PartidaController implements Initializable, Controller {
     public void initialize(URL url, ResourceBundle rb) {
         bingoGame = BingoGame.getInstance();
         playerListProperty = new SimpleListProperty<>(bingoGame.getPlayers());
-        generatedNumberLabel.setText(Integer.toString(bingoGame.getCurrentNumber()));
         if (!bingoGame.isHostInstance()) {
             changeNumber.setVisible(false);
         }
@@ -86,7 +84,7 @@ public class PartidaController implements Initializable, Controller {
 
     private void initGameView() {
         initTableView();
-//        lblPlayerName.setText(Player.getInstance().getName());
+        lblPlayerName.textProperty().bind(Player.getInstance().nameProperty());
     }
 
     private void prepareGame() {
@@ -101,6 +99,17 @@ public class PartidaController implements Initializable, Controller {
         if (maxCardboards == 1) {
             secondCardboardView.setVisible(false);
         }
+        generatedNumberLabel.textProperty().bindBidirectional(bingoGame.currentNumberProperty(), new StringConverter<Number>() {
+            @Override
+            public String toString(Number object) {
+                return object.toString();
+            }
+
+            @Override
+            public Number fromString(String string) {
+                return Integer.parseInt(string);
+            }
+        });
     }
 
     private void initTableView() {
@@ -184,15 +193,6 @@ public class PartidaController implements Initializable, Controller {
         alerta.setResizable(false);
         alerta.show();
     }
-
-    /**
-     * Funcion para cambiar el numero del Bingo enviado por el host
-     * @param number Texto del numero
-     */
-    public static void setGeneratedNumberLabel(String number){
-        System.out.println("SE CAMBIA EL NUMERO A:"+number);
-    }
-
 
     /**
      * Funcion para mostrar la alerta de que otro jugador canta Bingo

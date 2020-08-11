@@ -2,6 +2,7 @@ package bingo.game;
 
 import bingo.Controllers.PartidaController;
 import bingo.game.checker.BingoChecker;
+import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
@@ -76,11 +77,17 @@ public class BingoGame {
         return currentNumber.get();
     }
 
-    public void generateNewNumber(){ currentNumber.set(generator.getNumberToPlay()); }
+    public IntegerProperty currentNumberProperty() {
+        return this.currentNumber;
+    }
+
+    public void generateNewNumber() {
+        currentNumber.set(generator.getNumberToPlay());
+    }
 
     public void setCurrentNumber(int number) {
-        currentNumber.set(number);
-        PartidaController.setGeneratedNumberLabel(String.valueOf(currentNumber.get()));
+        Platform.runLater(() -> currentNumber.set(number));
+
     }
 
     public boolean isHostInstance() {

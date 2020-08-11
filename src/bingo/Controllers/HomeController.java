@@ -6,6 +6,7 @@
 package bingo.Controllers;
 
 import bingo.game.BingoGame;
+import bingo.game.Player;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,6 +15,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 import java.net.URL;
@@ -22,13 +24,14 @@ import java.util.ResourceBundle;
 public class HomeController implements Initializable, Controller {
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {}
+    public void initialize(URL location, ResourceBundle resources) {
+    }
 
     @FXML
-    private void goToLobby(ActionEvent event) throws IOException{
+    private void goToLobby(ActionEvent event) throws IOException {
         System.out.println("Lobby");
         FXMLLoader carga = new FXMLLoader(getClass().getResource("/bingo/vistas/MainMenu.fxml"));
-        Parent root = (Parent)carga.load();
+        Parent root = (Parent) carga.load();
         // Objeto de la partida a pasar a través de los controladores
         BingoGame game = BingoGame.getInstance();
         game.setHostInstance(true);
@@ -37,29 +40,36 @@ public class HomeController implements Initializable, Controller {
         controller.setBingoGame(game);
         Scene scene = new Scene(root);
         scene.getStylesheets().add("/bingo/vistas/MyStyles.css");
-        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(scene);
         window.setTitle("Lobby");
         window.show();
+        window.setOnCloseRequest(this::salir);
     }
+
     @FXML
     private void unirse(ActionEvent event) throws IOException {
         FXMLLoader carga = new FXMLLoader(getClass().getResource("/bingo/vistas/SelecPort.fxml"));
-        Parent root = (Parent)carga.load();
+        Parent root = (Parent) carga.load();
         SelecPortController controller = carga.getController();
         BingoGame game = BingoGame.getInstance();
         game.setHostInstance(false);
         controller.setBingoGame(game);
         Scene scene = new Scene(root);
         scene.getStylesheets().add("/bingo/vistas/MyStyles.css");
-        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(scene);
         window.setTitle("PORTS");
         window.show();
     }
 
     @FXML
-    private void salir(ActionEvent event){
+    private void salir(WindowEvent event) {
+        Player p = Player.getInstance();
+        if (p != null) {
+            p.disconnectAllPorts();
+        }
+        System.out.println("saliendo");
         System.exit(0);
     }
 }
