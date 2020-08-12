@@ -10,6 +10,7 @@ import bingo.game.BingoGame;
 import bingo.game.Player;
 import bingo.game.cardboard.BingoValue;
 import bingo.game.cardboard.Cardboard;
+import bingo.game.checker.FullChecker;
 import javafx.beans.property.*;
 import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
@@ -58,6 +59,9 @@ public class PartidaController implements Initializable, Controller {
     private Label generatedNumberLabel;
 
     @FXML
+    private Label tipoBing;
+
+    @FXML
     private Button changeNumber;
 
     private ListProperty<Player> playerListProperty;
@@ -99,6 +103,7 @@ public class PartidaController implements Initializable, Controller {
         if (maxCardboards == 1) {
             secondCardboardView.setVisible(false);
         }
+        tipoBing.setText(bingoGame.getInstance().getBingoChecker() instanceof FullChecker ? "FULL BINGO" : "LINEAL");
         generatedNumberLabel.textProperty().bindBidirectional(bingoGame.currentNumberProperty(), new StringConverter<Number>() {
             @Override
             public String toString(Number object) {
