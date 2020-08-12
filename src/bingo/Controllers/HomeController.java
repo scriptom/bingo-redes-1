@@ -61,6 +61,7 @@ public class HomeController implements Initializable, Controller {
         window.setScene(scene);
         window.setTitle("PORTS");
         window.show();
+        window.setOnCloseRequest(this::salir);
     }
 
     @FXML

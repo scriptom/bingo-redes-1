@@ -1,10 +1,12 @@
 package bingo.Controllers;
 
 import bingo.game.BingoGame;
+import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -17,40 +19,47 @@ import javafx.event.ActionEvent;
 public class VictoriayFalsoController {
     //Un flag para saber si la victoria es valida o no
     @FXML
-    private BooleanProperty victoria = new SimpleBooleanProperty(this, "victoria", false);
+    private BooleanProperty victoria = new SimpleBooleanProperty(this, "victoria");
 
     private BingoGame bingoGame;
 
     private Controller invoker;
 
+    private StringProperty playerName = new SimpleStringProperty(this, "playerName");
+
     @FXML
     private Label titulo;
 
     public void initialize() {
-        victoria.addListener((observable, oldValue, newValue) -> titulo.setText(newValue ? "Juanito tiene bingo!" : "Juanito tiene bingo falso"));
+        Platform.runLater(() -> {
+            titulo.textProperty()
+                    .bind(Bindings.createStringBinding(() -> playerName.get() + (victoria.get() ? " ha ganado" : " no tiene bingo"), victoria, playerName));
+        });
+
     }
+
     private void aceptar(ActionEvent event) throws Exception {
-        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.close();
-        Stage ventana = ((PartidaController)invoker).getVentana();
+        Stage ventana = ((PartidaController) invoker).getVentana();
         Parent inicial = FXMLLoader.load(getClass().getResource("/bingo/vistas/inicio.fxml"));
-        Scene scene = new Scene(inicial,600,400);
+        Scene scene = new Scene(inicial, 600, 400);
         scene.getStylesheets().add("/bingo/vistas/MyStyles.css");
         ventana.setScene(scene);
         ventana.show();
     }
 
-    private void bingoFalso(ActionEvent event){
-        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+    private void bingoFalso(ActionEvent event) {
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.close();
     }
+
     @FXML
-    private void elegir(ActionEvent event) throws Exception{
-        if (victoria.get()){
+    private void elegir(ActionEvent event) throws Exception {
+        if (victoria.get()) {
             System.out.println("hola");
             aceptar(event);
-        }
-        else{
+        } else {
             bingoFalso(event);
         }
     }
@@ -73,5 +82,9 @@ public class VictoriayFalsoController {
 
     public void setVictoria(boolean victoria) {
         this.victoria.set(victoria);
+    }
+
+    public void setPlayerName(String name) {
+        this.playerName.set(name);
     }
 }

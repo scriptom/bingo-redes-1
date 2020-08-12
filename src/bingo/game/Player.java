@@ -9,6 +9,7 @@ import bingo.game.checker.FullChecker;
 import bingo.game.checker.LineChecker;
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortEvent;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -117,33 +118,42 @@ public class Player implements Sender, Receiver, Serializable {
 
     @Override
     public int send(Message message, SerialPort serialPort) {
-        if (!serialPort.getDCD()) {
-            // Mientras no tengamos nadie a quién recibir, Añadimos mensajes a la cola
+        // Mandamos un mensage nulo en caso de que solo querramos vaciar la cola. Util para no tener que esperar a
+        // que se envie otro mensaje antes de restablecer la conexión. Por ejemplo, en joinExistingGame se espera hasta
+        // que haya conexión establecida para poder continuar con el pase a la pantalla de partida. Entonces tenemos que
+        // vaciar todos los mensajes que tengamos pendientes para evitar ciertos nulls fantasmas que salen por ahí 👀
+        boolean emptyQueue = message == null;
+        if (!emptyQueue) {
+            // Añadimos todos los mensajes que vengan, a una cola de mensajes pendientes
             pendingMessages.add(message);
-        } else {
-            // Ya podemos enviar porque tenemos receptor
+        }
+        // Si tenemos Carrier en la línea de transmisión, enviamos todos los mensajes pendientes
+        if (serialPort.getDCD()) {
+            int bytesWritten = 0;
             if (!pendingMessages.isEmpty()) {
-                Message pending;
-                // primero mandamos todos los mensajes pendientes
-                while ((pending = pendingMessages.remove()) != null) {
-                    send(pending, serialPort);
+                Iterator<Message> it = pendingMessages.iterator();
+                while (it.hasNext()) {
+                    byte[] messageBytes = new byte[0];
+                    try {
+                        // Serialización del mensaje a un ByteArray
+                        messageBytes = serialize(it.next());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    // Empezamos a mandar el mensaje
+                    serialPort.writeBytes(BEGIN_BYTES, 2);
+                    bytesWritten += serialPort.writeBytes(messageBytes, messageBytes.length);
+                    assert message != null;
+                    System.out.println("message.getContents() = " + message.getContents());
+                    System.out.println("message.getMessageType() = " + translateMessageType(message.getMessageType()));
+                    System.out.println("bytesWritten = " + bytesWritten);
+                    serialPort.writeBytes(END_BYTES, 3);
+                    it.remove();
                 }
             }
+            return bytesWritten;
         }
-
-        // Mandamos el mensaje
-        byte[] messageBytes = new byte[0];
-        try {
-            messageBytes = serialize(message);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        // Empezamos a mandar el mensaje
-        serialPort.writeBytes(BEGIN_BYTES, 2);
-        int bytesWritten = serialPort.writeBytes(messageBytes, messageBytes.length);
-        System.out.println("bytesWritten = " + bytesWritten);
-        serialPort.writeBytes(END_BYTES, 3);
-        return bytesWritten;
+        return 0;
     }
 
     @Override
@@ -187,15 +197,15 @@ public class Player implements Sender, Receiver, Serializable {
     }
 
     @Override
-    public void serialEvent(SerialPortEvent serialPortEvent) {
+    public synchronized void serialEvent(SerialPortEvent serialPortEvent) {
         if (serialPortEvent.getEventType() == getListeningEvents()) {
             byte[] data = serialPortEvent.getReceivedData();
             try {
                 Message message = deserialize(data);
                 // Verificamos si completamos la vuelta del anillo. Realmente no nos interesa más de aquí
                 if (!ringComplete(message)) {
-                    System.out.println("Message.translateMessageType(message.getMessageType()) = " + translateMessageType(message.getMessageType()));
-                    System.out.println("message.getSenderSerialPortName() = " + message.getSenderSerialPortName());
+//                    System.out.println("Message.translateMessageType(message.getMessageType()) = " + translateMessageType(message.getMessageType()));
+//                    System.out.println("message.getSenderSerialPortName() = " + message.getSenderSerialPortName());
                     switch (message.getMessageType()) {
                         case JOIN:
                             if (null != game && game.isHostInstance()) {
@@ -225,14 +235,15 @@ public class Player implements Sender, Receiver, Serializable {
                             break;
                         case NEXT_NUMBER:
                             game.setCurrentNumber((int) message.getContents());
-                            System.out.println("MENSAJE:"+message.getContents());
+//                            System.out.println("MENSAJE:"+message.getContents());
                             retransmitMessage(message);
                             break;
                         case HAS_BINGO:
-                            // Ya ganó. TODO: Crear trigger para esto.
+                            // Ya ganó alguien.
                             String winnerName = (String) message.getContents();
-                            PartidaController.showBingoAlert(winnerName);
-                            System.out.println("GANADOR: "+winnerName);
+//                            System.out.println("GANADOR: "+winnerName);
+                            Platform.runLater(() -> game.setWinnerName(winnerName));
+                            retransmitMessage(message);
                             break;
                         case CURRENT_PLAYERS:
                             if (null == game) {
@@ -243,12 +254,7 @@ public class Player implements Sender, Receiver, Serializable {
                             List<Player> playerList = Arrays.stream(names)
                                     .map(Player::new)
                                     .collect(Collectors.toList());
-                            int originalSize = game.getPlayers().size();
                             game.setPlayers(playerList);
-                            int newSize = game.getPlayers().size();
-                            System.out.println("originalSize = " + originalSize);
-                            System.out.println("newSize = " + newSize);
-                            System.out.println("playerList = " + playerList);
                             retransmitMessage(message);
                             break;
                         case FULL_BINGO:
@@ -257,6 +263,7 @@ public class Player implements Sender, Receiver, Serializable {
                             }
                             // Ajustamos la config para usar FullChecker o LineChecker
                             boolean isFullBingo = (boolean) message.getContents();
+                            System.out.println("isFullBingo = " + isFullBingo);
                             if (null == game.getBingoChecker()) {
                                 game.setBingoChecker(isFullBingo ? new FullChecker() : new LineChecker());
                             }
@@ -268,6 +275,7 @@ public class Player implements Sender, Receiver, Serializable {
                             }
                             // Ajustamos la config para manejar 2 cartones o uno
                             boolean isTwoCardboards = (boolean) message.getContents();
+                            System.out.println("isTwoCardboards = " + isTwoCardboards);
                             if (0 == game.getMaxCardboards()) {
                                 game.setMaxCardboards(isTwoCardboards ? 2 : 1);
                             }
@@ -289,6 +297,10 @@ public class Player implements Sender, Receiver, Serializable {
                     }
 
                 }
+                if (game != null && !game.isUnplayable()) {
+//                    System.out.println("notifying");
+                    notifyAll();
+                }
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
@@ -306,18 +318,19 @@ public class Player implements Sender, Receiver, Serializable {
     /**
      * Pregunta si hay algún juego de bingo
      */
-    public void joinExistingGame() {
+    public synchronized void joinExistingGame() {
         Message message = new Message(writingSerialPort.toString(), JOIN, name.get());
         System.out.println("Solicitando entrar a partida...");
         send(message, writingSerialPort);
-        while (!readingSerialPort.getDCD() || !writingSerialPort.getDCD()) {
-            System.out.println("No hay carrier en lectura/escritura. Seguiré esperando...");
+        while (game == null || game.isUnplayable()) {
+//            System.out.println("waiting");
             try {
-                Thread.sleep(500);
+                wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
+        send(null, writingSerialPort);
     }
 
     /**
@@ -326,7 +339,7 @@ public class Player implements Sender, Receiver, Serializable {
      * @param message Mensaje a retransmitir
      */
     private void retransmitMessage(Message message) {
-        System.out.println("Retransmisión.");
+//        System.out.println("Retransmisión.");
         send(message, writingSerialPort);
     }
 
@@ -377,5 +390,10 @@ public class Player implements Sender, Receiver, Serializable {
     @Override
     public String toString() {
         return getName();
+    }
+
+    @Override
+    public void catchException(Exception e) {
+        e.printStackTrace();
     }
 }

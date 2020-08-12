@@ -52,6 +52,7 @@ public class SelecPortController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        bingoGame = BingoGame.getInstance();
         fillPortsList(); //se rellena el array de puertos
         initTableView(); //se inicializa la tabla con los puertos
         initTableView2(); //se inicializa la tabla con los puertos
@@ -129,7 +130,7 @@ public class SelecPortController implements Initializable {
         player.setReadingSerialPort(readingSerialPort);
         if (!isNewGame()) {
             player.joinExistingGame();
-            bingoGame = player.getGame();
+            player.setGame(bingoGame = BingoGame.getInstance());
         } else {
             bingoGame.setHostPlayer(player);
             bingoGame.addPlayer(player);

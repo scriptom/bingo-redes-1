@@ -3,9 +3,8 @@ package bingo.game;
 import bingo.Controllers.PartidaController;
 import bingo.game.checker.BingoChecker;
 import javafx.application.Platform;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleListProperty;
+import javafx.beans.Observable;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -20,6 +19,7 @@ public class BingoGame {
     private BingoNumberGenerator generator;
     private IntegerProperty currentNumber = new SimpleIntegerProperty(this, "currentNumber");
     private boolean hostInstance;
+    private SimpleStringProperty winnerName = new SimpleStringProperty(this, "winnerName");
 
 
     private BingoGame() {
@@ -96,5 +96,25 @@ public class BingoGame {
 
     public void setHostInstance(boolean hostInstance) {
         this.hostInstance = hostInstance;
+    }
+
+    public String getWinnerName() {
+        return winnerName.get();
+    }
+
+    public void setWinnerName(String winnerName) {
+        this.winnerName.set(winnerName);
+    }
+
+    public StringProperty winnerNameProperty() {
+        return winnerName;
+    }
+
+    public boolean isUnplayable() {
+        return
+                getPlayers() == null ||
+                getBingoChecker() == null ||
+                getMaxCardboards() == 0 ||
+                getHostPlayer() == null;
     }
 }

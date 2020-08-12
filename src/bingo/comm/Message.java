@@ -13,11 +13,6 @@ import java.util.Arrays;
  *  Las comunicaciones de los emisores debe ser <b>estrictamente</b> por el puerto de escritura (Es decir, la comunicación debe ser en 1 solo sentido)
  */
 public class Message implements Serializable {
-    private static ByteArrayOutputStream bos;
-    private static ObjectOutputStream os;
-    private static ByteArrayInputStream in;
-    private static ObjectInputStream is;
-
     /* Constantes de Tipo de mensaje */
 
     public static String translateMessageType(byte messageType) {

@@ -11,7 +11,10 @@ import bingo.game.Player;
 import bingo.game.cardboard.BingoValue;
 import bingo.game.cardboard.Cardboard;
 import bingo.game.checker.FullChecker;
+import javafx.application.Platform;
 import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -32,6 +35,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.StringConverter;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
@@ -66,6 +70,8 @@ public class PartidaController implements Initializable, Controller {
 
     private ListProperty<Player> playerListProperty;
 
+    private StringProperty winnerName = new SimpleStringProperty();
+
     //Crear Pseudoclass para el css
     private static final String MARCADO = "marcado";
 
@@ -77,13 +83,22 @@ public class PartidaController implements Initializable, Controller {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        bingoGame = BingoGame.getInstance();
-        playerListProperty = new SimpleListProperty<>(bingoGame.getPlayers());
-        if (!bingoGame.isHostInstance()) {
-            changeNumber.setVisible(false);
-        }
-        prepareGame();
-        initGameView();
+        Platform.runLater(() -> {
+            bingoGame = BingoGame.getInstance();
+            bingoGame.winnerNameProperty().addListener((observable, oldValue, newValue) -> {
+                try {
+                    showBingoAlert(newValue, true);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+            playerListProperty = new SimpleListProperty<>(bingoGame.getPlayers());
+            if (!bingoGame.isHostInstance()) {
+                changeNumber.setVisible(false);
+            }
+            prepareGame();
+            initGameView();
+        });
     }
 
     private void initGameView() {
@@ -95,6 +110,7 @@ public class PartidaController implements Initializable, Controller {
         int maxCardboards = bingoGame.getMaxCardboards();
         Cardboard[] cardboards = new Cardboard[maxCardboards];
         GridPane[] panes = new GridPane[]{firstCardboard, secondCardboard};
+        System.out.println("maxCardboards = " + maxCardboards);
         for (int i = 0; i < maxCardboards; i++) {
             cardboards[i] = new Cardboard(bingoGame.getBingoChecker());
             fill(panes[i], cardboards[i].getSquares(), i + 1);
@@ -103,18 +119,8 @@ public class PartidaController implements Initializable, Controller {
         if (maxCardboards == 1) {
             secondCardboardView.setVisible(false);
         }
-        tipoBing.setText(bingoGame.getInstance().getBingoChecker() instanceof FullChecker ? "FULL BINGO" : "LINEAL");
-        generatedNumberLabel.textProperty().bindBidirectional(bingoGame.currentNumberProperty(), new StringConverter<Number>() {
-            @Override
-            public String toString(Number object) {
-                return object.toString();
-            }
-
-            @Override
-            public Number fromString(String string) {
-                return Integer.parseInt(string);
-            }
-        });
+        tipoBing.setText(bingoGame.getBingoChecker() instanceof FullChecker ? "FULL BINGO" : "LINEAL");
+        generatedNumberLabel.textProperty().bind(bingoGame.currentNumberProperty().asString());
     }
 
     private void initTableView() {
@@ -138,7 +144,7 @@ public class PartidaController implements Initializable, Controller {
                 String letter = getLetter(j + 1);
                 String position = letter + (i + 1);
                 int number = squares.get(position).getNumber();
-
+                System.out.println("number = " + number);
                 //Se toma el numero de la casilla creada en la clase Cardboard
                 numberButton.setText(Integer.toString(number));
                 //Se establece
@@ -175,20 +181,32 @@ public class PartidaController implements Initializable, Controller {
                 System.out.println("BINGO");
                 bingo = true;
                 Player player = Player.getInstance();
-                Message message = new Message(player.getWritingSerialPort().toString(),Message.HAS_BINGO);
+                Message message = new Message(player.getWritingSerialPort().toString(), Message.HAS_BINGO);
                 message.setContents(player.getName());
                 player.send(message, player.getWritingSerialPort());
-                //MOSTRAR VISTA DE BINGO CORRECTO
                 break;
             }
         }
+        if (bingo){
+            bingoGame.setWinnerName(Player.getInstance().getName());
+        } else {
+            showBingoAlert(Player.getInstance().getName(), false);
+        }
+    }
+
+    /**
+     * Funcion para mostrar la alerta de que otro jugador canta Bingo
+     *
+     * @param name Nombre del jugador
+     */
+    public void showBingoAlert(String name, boolean isVictory) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/bingo/vistas/Victoria.fxml"));
         Parent root = loader.load();
         VictoriayFalsoController controller = loader.getController();
         controller.setInvoker(this);
-        controller.setBingoGame(bingoGame);
-        System.out.println("Cambiando Victoria a " + bingo);
-        controller.setVictoria(bingo);
+        System.out.println("Cambiando Victoria a " + isVictory);
+        controller.setPlayerName(name);
+        controller.setVictoria(isVictory);
         Scene scene = new Scene(root, 400, 200);
         scene.getStylesheets().add("/bingo/vistas/MyStyles.css");
         Stage alerta = new Stage(StageStyle.TRANSPARENT);
@@ -199,18 +217,9 @@ public class PartidaController implements Initializable, Controller {
         alerta.show();
     }
 
-    /**
-     * Funcion para mostrar la alerta de que otro jugador canta Bingo
-     * @param name Nombre del jugador
-     */
-    public static void showBingoAlert(String name){
-        //COLOCAR CODIGO PARA MOSTRAR NOTIFICACION DE QUE OTRO JUGADOR TUVO BINGO
-    }
-
     @FXML
-    public void changeBingoNumber(ActionEvent event) throws Exception{
+    public void changeBingoNumber(ActionEvent event) throws Exception {
         bingoGame.generateNewNumber();
-        generatedNumberLabel.setText(Integer.toString(bingoGame.getCurrentNumber()));
         Player player = Player.getInstance();
         Message bingoNumber = new Message(player.getWritingSerialPort().toString(), NEXT_NUMBER, bingoGame.getCurrentNumber());
         player.send(bingoNumber, player.getWritingSerialPort());
@@ -271,12 +280,12 @@ public class PartidaController implements Initializable, Controller {
                 ES NECESARIO VALIDAR SI EL NUMERO QUE SALIO ES EL MISMO QUE TIENE EL CUADRO PARA PODER MARCARLO
                  */
                 Cardboard cardboard = Player.getInstance().getCardboard(cardboardIndex);
-                if(cardboard.getNumber(position) == Integer.valueOf(generatedNumberLabel.getText())){
+                if (cardboard.getNumber(position) == Integer.valueOf(generatedNumberLabel.getText())) {
                     cardboard.checkIfPresent(position);
                     button.pseudoClassStateChanged(SELECTED_PSEUDO_CLASS, true);
                     userData.put("checked", true);
                     System.out.println("Value checked");
-                }else{
+                } else {
                     System.out.println("Cant check value");
                 }
             }
